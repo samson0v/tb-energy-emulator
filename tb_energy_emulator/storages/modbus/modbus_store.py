@@ -8,6 +8,12 @@ from pymodbus.datastore import ModbusServerContext, ModbusSlaveContext, ModbusSe
 from tb_energy_emulator.storage import Storage
 
 
+MODBUS_WRITE_TO_READ_FUNCTION_CODES = {
+    5: 1,
+    6: 3
+}
+
+
 class ModbusStore(Storage):
     def __init__(self, config):
         self.__running = False
@@ -51,5 +57,9 @@ class ModbusStore(Storage):
 
         await self.__storage.async_setValues(function_code, address, [value])
 
-    def get_value(self, key: str) -> Any:
-        pass
+    async def get_value(self, function_code=None, address=None, **kwargs) -> Any:
+        function_code = MODBUS_WRITE_TO_READ_FUNCTION_CODES.get(function_code, function_code)
+
+        value = await self.__storage.async_getValues(function_code, address, 1)
+
+        return value[0]

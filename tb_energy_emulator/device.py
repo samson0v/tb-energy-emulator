@@ -31,9 +31,8 @@ class BaseDevice:
     def __str__(self):
         return self.__dict__.__str__()
 
-    @abstractmethod
-    def update(self):
-        pass
+    async def update(self):
+        await self.__update_running_status()
 
     @property
     def name(self):
@@ -92,7 +91,16 @@ class BaseDevice:
         self.running.value = False
         await self._storage.set_value(value=self.running.value, **self.running.config)
 
-        print(self._storage._ModbusStore__storage.store['c'].values[0:10])
+    async def __update_running_status(self):
+        running = bool(await self._storage.get_value(**self.running.config))
+
+        if running != self.running.value:
+            self.running.value = running
+
+            if running:
+                await self.on(with_init_values=False)
+            else:
+                await self.off()
 
 
 class Devices:

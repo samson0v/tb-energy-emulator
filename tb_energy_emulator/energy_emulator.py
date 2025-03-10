@@ -20,6 +20,9 @@ class TbEnergyEmulator(Emulator):
         while self._running:
             self._log.info(f'{self._clock}')
 
+            power_transformer = self._devices.get_device_by_name('Power Transformer')
+            await power_transformer.update()
+
             wind_turbine = self._devices.get_device_by_name('Wind Turbine')
             await wind_turbine.update()
 

@@ -26,6 +26,9 @@ class Sensor:
 
         return self.__value
 
+    def get_value_without_multiplier(self):
+        return self.__value
+
     @value.setter
     def value(self, value):
         if self.min_value and self.max_value:

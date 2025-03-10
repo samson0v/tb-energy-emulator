@@ -22,6 +22,8 @@ class WindTurbine(BaseDevice):
             f'\n\toutput power: {self.output_power} W, wind direction: {self.wind_direction}°'
 
     async def update(self):
+        await super().update()
+
         if self.running.value:
             await self.__update_wind_direction()
             await self.__update_wind_speed()

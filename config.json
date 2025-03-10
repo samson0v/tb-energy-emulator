@@ -459,6 +459,178 @@
                         "node_id": "ns=1; i=Running",
                         "name": "Running"
                     }
+                },
+                {
+                    "name": "frequency",
+                    "initValue": 50.0,
+                    "maxValue": 50.4,
+                    "minValue": 49.6,
+                    "multiplier": 10,
+                    "deviation": 0.2,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Frequency",
+                        "name": "Frequency"
+                    }
+                },
+                {
+                    "name": "input_voltage_l1",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 2,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL1",
+                        "name": "InputVoltageL1"
+                    }
+                },
+                {
+                    "name": "input_voltage_l2",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 3,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL2",
+                        "name": "InputVoltageL2"
+                    }
+                },
+                {
+                    "name": "input_voltage_l3",
+                    "initValue": 221,
+                    "maxValue": 239,
+                    "minValue": 191,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 4,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL3",
+                        "name": "InputVoltageL3"
+                    }
+                },
+                {
+                    "name": "output_voltage_l1",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 5,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL1",
+                        "name": "OutputVoltageL1"
+                    }
+                },
+                {
+                    "name": "output_voltage_l2",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 6,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL2",
+                        "name": "OutputVoltageL2"
+                    }
+                },
+                {
+                    "name": "output_voltage_l3",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 7,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL3",
+                        "name": "OutputVoltageL3"
+                    }
+                },
+                {
+                    "name": "current",
+                    "initValue": 0,
+                    "minValue": 40,
+                    "maxValue": 65,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 8,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Current",
+                        "name": "Current"
+                    }
+                },
+                {
+                    "name": "power",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 9,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Power",
+                        "name": "Power"
+                    }
+                },
+                {
+                    "name": "l1_mode",
+                    "initValue": 2,
+                    "modbus": {
+                        "address": 10,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=L1Voltage",
+                        "name": "L1Voltage"
+                    }
+                },
+                {
+                    "name": "l2_mode",
+                    "initValue": 1,
+                    "modbus": {
+                        "address": 11,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=L2Voltage",
+                        "name": "L2Voltage"
+                    }
+                },
+                {
+                    "name": "l3_mode",
+                    "initValue": 1,
+                    "modbus": {
+                        "address": 12,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=L3Voltage",
+                        "name": "L3Voltage"
+                    }
                 }
             ]
         }

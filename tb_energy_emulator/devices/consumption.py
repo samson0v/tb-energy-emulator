@@ -25,6 +25,8 @@ class Consumption(BaseDevice):
         return self.__total_consumption
 
     async def update(self):
+        await super().update()
+
         await self.__update_frequency()
         await self.__update_voltage()
         await self.__update_consumption()

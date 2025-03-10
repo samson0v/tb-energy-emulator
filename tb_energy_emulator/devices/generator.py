@@ -34,6 +34,8 @@ class Generator(BaseDevice):
         await self._storage.set_value(value=self.frequency.value, **self.frequency.config)
 
     async def update(self, consuption):
+        await super().update()
+
         if self.running.value:
             await self.__update_oil_temperature()
             await self.__update_voltage()

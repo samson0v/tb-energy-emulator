@@ -41,6 +41,8 @@ class SolarBatteries(BaseDevice):
         await self._storage.set_value(value=self.current.value, **self.current.config)
 
     async def update(self):
+        await super().update()
+
         if self.running.value:
             await self.__update_lux_by_time()
             await self.__update_temperature_by_time()
