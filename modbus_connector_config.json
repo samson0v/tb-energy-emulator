@@ -1,0 +1,310 @@
+{
+    "logLevel": "DEBUG",
+    "master": {
+        "slaves": [
+            {
+                "host": "0.0.0.0",
+                "port": 5040,
+                "type": "tcp",
+                "method": "socket",
+                "timeout": 3,
+                "byteOrder": "BIG",
+                "wordOrder": "LITTLE",
+                "retries": true,
+                "retryOnEmpty": true,
+                "retryOnInvalid": true,
+                "pollPeriod": 1000,
+                "unitId": 1,
+                "deviceName": "Consumption",
+                "deviceType": "default",
+                "reportStrategy": {
+                    "type": "ON_CHANGE_OR_REPORT_PERIOD",
+                    "reportPeriod": 10000
+                },
+                "connectAttemptTimeMs": 3000,
+                "connectAttemptCount": 3,
+                "waitAfterFailedAttemptsMs": 30000,
+                "attributes": [],
+                "timeseries": [
+                    {
+                        "tag": "running",
+                        "type": "bit",
+                        "functionCode": 1,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "voltageL1",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "voltageL2",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 2
+                    },
+                    {
+                        "tag": "voltageL3",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 3
+                    },
+                    {
+                        "tag": "frequencyL1",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 4
+                    },
+                    {
+                        "tag": "frequencyL2",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 5
+                    },
+                    {
+                        "tag": "frequencyL3",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 6
+                    },
+                    {
+                        "tag": "consumptionL1",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 7
+                    },
+                    {
+                        "tag": "consumptionL2",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 8
+                    },
+                    {
+                        "tag": "consumptionL3",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 9
+                    }
+                ],
+                "attributeUpdates": [],
+                "rpc": []
+            },
+            {
+                "host": "0.0.0.0",
+                "port": 5041,
+                "type": "tcp",
+                "method": "socket",
+                "timeout": 3,
+                "byteOrder": "BIG",
+                "wordOrder": "LITTLE",
+                "retries": true,
+                "retryOnEmpty": true,
+                "retryOnInvalid": true,
+                "pollPeriod": 1000,
+                "unitId": 1,
+                "deviceName": "Generator",
+                "deviceType": "default",
+                "reportStrategy": {
+                    "type": "ON_REPORT_PERIOD",
+                    "reportPeriod": 1000
+                },
+                "connectAttemptTimeMs": 3000,
+                "connectAttemptCount": 3,
+                "waitAfterFailedAttemptsMs": 30000,
+                "attributes": [],
+                "timeseries": [
+                    {
+                        "tag": "running",
+                        "type": "bit",
+                        "functionCode": 1,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "oilTemperature",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "frequency",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 2
+                    },
+                    {
+                        "tag": "voltage",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 3
+                    },
+                    {
+                        "tag": "fuelLevel",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 4
+                    },
+                    {
+                        "tag": "outputPower",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 5
+                    },
+                    {
+                        "tag": "current",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 6
+                    }
+                ]
+            },
+            {
+                "host": "0.0.0.0",
+                "port": 5042,
+                "type": "tcp",
+                "method": "socket",
+                "timeout": 3,
+                "byteOrder": "BIG",
+                "wordOrder": "LITTLE",
+                "retries": true,
+                "retryOnEmpty": true,
+                "retryOnInvalid": true,
+                "pollPeriod": 1000,
+                "unitId": 1,
+                "deviceName": "Solar Batteries",
+                "deviceType": "default",
+                "reportStrategy": {
+                    "type": "ON_CHANGE_OR_REPORT_PERIOD",
+                    "reportPeriod": 10000
+                },
+                "connectAttemptTimeMs": 3000,
+                "connectAttemptCount": 3,
+                "waitAfterFailedAttemptsMs": 30000,
+                "attributes": [],
+                "timeseries": [
+                    {
+                        "tag": "running",
+                        "type": "bit",
+                        "functionCode": 1,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "illuminance",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "voltage",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 2
+                    },
+                    {
+                        "tag": "temperature",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 3
+                    },
+                    {
+                        "tag": "powerOuput",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 4
+                    },
+                    {
+                        "tag": "current",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 5
+                    }
+                ]
+            },
+            {
+                "host": "0.0.0.0",
+                "port": 5043,
+                "type": "tcp",
+                "method": "socket",
+                "timeout": 3,
+                "byteOrder": "BIG",
+                "wordOrder": "LITTLE",
+                "retries": true,
+                "retryOnEmpty": true,
+                "retryOnInvalid": true,
+                "pollPeriod": 1000,
+                "unitId": 1,
+                "deviceName": "Wind Turbine",
+                "deviceType": "default",
+                "reportStrategy": {
+                    "type": "ON_REPORT_PERIOD",
+                    "reportPeriod": 1000
+                },
+                "connectAttemptTimeMs": 3000,
+                "connectAttemptCount": 3,
+                "waitAfterFailedAttemptsMs": 30000,
+                "attributes": [],
+                "timeseries": [
+                    {
+                        "tag": "running",
+                        "type": "bit",
+                        "functionCode": 1,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "powerOtput",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 1
+                    },
+                    {
+                        "tag": "rotorSpeed",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 2
+                    },
+                    {
+                        "tag": "windSpeed",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 3
+                    },
+                    {
+                        "tag": "windDirection",
+                        "type": "16int",
+                        "functionCode": 3,
+                        "objectsCount": 1,
+                        "address": 4
+                    }
+                ]
+            }
+        ]
+    },
+    "id": "bf705ab0-c332-4246-9f55-905b69c42d47"
+}

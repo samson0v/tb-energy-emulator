@@ -35,17 +35,9 @@ class BaseDevice:
     def update(self):
         pass
 
-    @abstractmethod
-    def get_sensors_config(self):
-        pass
-
     @property
     def name(self):
         return self.__name
-
-    @property
-    def update_period(self):
-        return self.__update_period
 
     def __load_class_attributes(self):
         self.__log.info('\tLoading sensors...')
@@ -72,7 +64,7 @@ class BaseDevice:
         return storage
 
     async def __init_storage_values(self):
-        self.__log.info('\tInitializing storage values...')
+        self.__log.info('Initializing storage values...')
 
         for value_config in self.__config.get('values', []):
             try:
@@ -84,16 +76,23 @@ class BaseDevice:
                 self.__log.error(f'{value_config['name']} value loading failed: {e}')
                 continue
 
-        self.__log.info('\t[✔] Storage values initialized')
+        self.__log.info('[✔] Storage values initialized')
 
     async def start(self):
-        asyncio.gather(*[self._storage.start(), self.__init_storage_values()])
+        await self._storage.start()
 
-    def on(self):
-        self.running = True
+    async def on(self, with_init_values=True):
+        if with_init_values:
+            await self.__init_storage_values()
 
-    def off(self):
-        self.running = False
+        self.running.value = True
+        await self._storage.set_value(value=self.running.value, **self.running.config)
+
+    async def off(self):
+        self.running.value = False
+        await self._storage.set_value(value=self.running.value, **self.running.config)
+
+        print(self._storage._ModbusStore__storage.store['c'].values[0:10])
 
 
 class Devices:
@@ -129,9 +128,9 @@ class Devices:
     async def start(self):
         asyncio.gather(*[device.start() for device in self.__devices.values()])
 
-    def on(self):
+    async def on(self):
         for device in self.__devices.values():
-            device.on()
+            await device.on()
 
     async def off(self):
         for device in self.__devices.values():

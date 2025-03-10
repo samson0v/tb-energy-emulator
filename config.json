@@ -1,13 +1,14 @@
 {
     "storageType": "modbus",
-    "globalClockUpdateFrequency": 1,
+    "clockType": "realtime",
+    "globalClockUpdateFrequency": 1.0,
     "devices": [
         {
             "className": "Consumption",
             "name": "Consumption",
             "storageType": "modbus",
             "modbusSettings": {
-                "port": 5021,
+                "port": 5040,
                 "slaveId": 1
             },
             "opcuaSettings": {
@@ -16,10 +17,10 @@
             "values": [
                 {
                     "name": "running",
-                    "initValue": 0,
+                    "initValue": false,
                     "modbus": {
                         "address": 1,
-                        "function_code": 1
+                        "function_code": 5
                     },
                     "opcua": {
                         "node_id": "ns=1; s=Running",
@@ -31,9 +32,10 @@
                     "initValue": 221,
                     "maxValue": 229,
                     "minValue": 221,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 1,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=VoltageL1",
@@ -45,9 +47,10 @@
                     "initValue": 221,
                     "maxValue": 229,
                     "minValue": 221,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 2,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=VoltageL2",
@@ -59,9 +62,10 @@
                     "initValue": 221,
                     "maxValue": 229,
                     "minValue": 221,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 3,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=VoltageL3",
@@ -73,9 +77,10 @@
                     "initValue": 50.0,
                     "maxValue": 50.4,
                     "minValue": 49.6,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 4,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=FrequencyL1",
@@ -87,9 +92,10 @@
                     "initValue": 50.0,
                     "maxValue": 50.4,
                     "minValue": 49.6,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 5,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=FrequencyL2",
@@ -101,9 +107,10 @@
                     "initValue": 50.0,
                     "maxValue": 50.4,
                     "minValue": 49.6,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 6,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=FrequencyL3",
@@ -117,7 +124,7 @@
                     "minValue": 0,
                     "modbus": {
                         "address": 7,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=ConsumptionL1",
@@ -131,7 +138,7 @@
                     "minValue": 0,
                     "modbus": {
                         "address": 8,
-                        "function_code": 4
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=ConsumptionL2",
@@ -145,7 +152,7 @@
                     "minValue": 0,
                     "modbus": {
                         "address": 9,
-                        "function_code": 5
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=ConsumptionL3",
@@ -159,7 +166,7 @@
             "name": "Generator",
             "storageType": "modbus",
             "modbusSettings": {
-                "port": 5022,
+                "port": 5041,
                 "slaveId": 1
             },
             "opcuaSettings": {
@@ -168,10 +175,10 @@
             "values": [
                 {
                     "name": "running",
-                    "initValue": 0,
+                    "initValue": false,
                     "modbus": {
                         "address": 1,
-                        "function_code": 1
+                        "function_code": 5
                     },
                     "opcua": {
                         "node_id": "ns=1; i=Running",
@@ -185,7 +192,7 @@
                     "minValue": 11,
                     "modbus": {
                         "address": 1,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=OilTemperature",
@@ -197,9 +204,11 @@
                     "initValue": 50.0,
                     "maxValue": 50.4,
                     "minValue": 49.6,
+                    "multiplier": 10,
+                    "deviation": 0.2,
                     "modbus": {
                         "address": 2,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=Frequency",
@@ -211,10 +220,11 @@
                     "initValue": 221,
                     "maxValue": 229,
                     "minValue": 221,
-                    "deviation": 1,
+                    "deviation": 2,
+                    "multiplier": 10,
                     "modbus": {
                         "address": 3,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=Voltage",
@@ -228,7 +238,7 @@
                     "minValue": 0,
                     "modbus": {
                         "address": 4,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=FuelLevel",
@@ -242,7 +252,7 @@
                     "minValue": 20000,
                     "modbus": {
                         "address": 5,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=OutputPower",
@@ -256,11 +266,198 @@
                     "minValue": 101,
                     "modbus": {
                         "address": 6,
-                        "function_code": 3
+                        "function_code": 6
                     },
                     "opcua": {
                         "node_id": "ns=1; s=Current",
                         "name": "Current"
+                    }
+                }
+            ]
+        },
+        {
+            "className": "SolarBatteries",
+            "name": "Solar Batteries",
+            "storageType": "modbus",
+            "modbusSettings": {
+                "port": 5042,
+                "slaveId": 1
+            },
+            "opcuaSettings": {
+                "host": "opc.tcp://0.0.0.0:4842/freeopcua/server/"
+            },
+            "values": [
+                {
+                    "name": "running",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running",
+                        "name": "Running"
+                    }
+                },
+                {
+                    "name": "illuminance",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Illuminance",
+                        "name": "Illuminance"
+                    }
+                },
+                {
+                    "name": "voltage",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 2,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Voltage",
+                        "name": "Voltage"
+                    }
+                },
+                {
+                    "name": "temperature",
+                    "initValue": 10,
+                    "modbus": {
+                        "address": 3,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Temperature",
+                        "name": "Temperature"
+                    }
+                },
+                {
+                    "name": "power_ouput",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 4,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=PowerOuput",
+                        "name": "PowerOuput"
+                    }
+                },
+                {
+                    "name": "current",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 5,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Current",
+                        "name": "Current"
+                    }
+                }
+            ]
+        },
+        {
+            "className": "WindTurbine",
+            "name": "Wind Turbine",
+            "storageType": "modbus",
+            "modbusSettings": {
+                "port": 5043,
+                "slaveId": 1
+            },
+            "opcuaSettings": {
+                "host": "opc.tcp://0.0.0.0:4843/freeopcua/server/"
+            },
+            "values": [
+                {
+                    "name": "running",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running",
+                        "name": "Running"
+                    }
+                },
+                {
+                    "name": "output_power",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputPower",
+                        "name": "OutputPower"
+                    }
+                },
+                {
+                    "name": "rotor_speed",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 2,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=RotorSpeed",
+                        "name": "RotorSpeed"
+                    }
+                },
+                {
+                    "name": "wind_speed",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 3,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=WindSpeed",
+                        "name": "WindSpeed"
+                    }
+                },
+                {
+                    "name": "wind_direction",
+                    "initValue": 0,
+                    "multiplier": 100,
+                    "modbus": {
+                        "address": 4,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=WindDirection",
+                        "name": "WindDirection"
+                    }
+                }
+            ]
+        },
+        {
+            "className": "PowerTransformer",
+            "name": "Power Transformer",
+            "storageType": "modbus",
+            "modbusSettings": {
+                "port": 5044,
+                "slaveId": 1
+            },
+            "opcuaSettings": {
+                "host": "opc.tcp://0.0.0.0:4844/freeopcua/server/"
+            },
+            "values": [
+                {
+                    "name": "running",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running",
+                        "name": "Running"
                     }
                 }
             ]

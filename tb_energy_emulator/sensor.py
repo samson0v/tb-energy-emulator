@@ -9,6 +9,7 @@ class Sensor:
             self.__config = config.get('opcua')
         else:
             self.__config = config.get('modbus')
+            self.multiplier = config.get('multiplier')
 
         self.__value = config.get('initValue', 0)
         self.min_value = config.get('minValue')
@@ -16,16 +17,19 @@ class Sensor:
         self.__deviation = config.get('deviation', 1)
 
     def __str__(self):
-        return f'{self.value}'
+        return f'{self.__value}'
 
     @property
     def value(self):
+        if hasattr(self, 'multiplier') and not isinstance(self.__value, (bool)) and self.multiplier is not None:
+            return int(self.__value * self.multiplier)
+
         return self.__value
 
     @value.setter
     def value(self, value):
         if self.min_value and self.max_value:
-            if self.min_value >= value >= self.max_value:
+            if self.min_value >= value >= self.max_value and value == 0:
                 raise ValueError(f'Value {value} is out of range [{self.min_value}, {self.max_value}]')
 
         self.__value = value
@@ -50,5 +54,7 @@ class Sensor:
         return self.__config.get('dataType')
 
     def generate_value(self):
-        new_number = self.value + random.randint(-self.__deviation, self.__deviation)
-        self.value = max(self.min_value, min(self.max_value, new_number))
+        new_number = self.__value + random.uniform(-self.__deviation, self.__deviation)
+        value = round(max(self.min_value, min(self.max_value, new_number)), 1)
+
+        self.__value = value

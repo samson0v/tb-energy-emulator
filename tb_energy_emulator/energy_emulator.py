@@ -15,21 +15,26 @@ class TbEnergyEmulator(Emulator):
         await super()._run()
 
         await self._devices.start()
-        await self.start_generating()
+        await self._devices.on()
 
         while self._running:
             self._log.info(f'{self._clock}')
 
+            wind_turbine = self._devices.get_device_by_name('Wind Turbine')
+            await wind_turbine.update()
+
+            solar_batteries = self._devices.get_device_by_name('Solar Batteries')
+            await solar_batteries.update()
+
             consumption = self._devices.get_device_by_name('Consumption')
             await consumption.update()
+
             generator = self._devices.get_device_by_name('Generator')
             await generator.update(consumption.needed_consumption)
+
             self._devices.log_values()
 
             await self._clock.tick()
-
-    async def start_generating(self):
-        self._devices.on()
 
 
 if __name__ == '__main__':

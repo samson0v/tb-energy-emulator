@@ -1,32 +1,24 @@
-from asyncio import sleep
+from abc import abstractmethod
 
 
 class Clock:
     def __init__(self, update_frequency=1.0):
-        self.__update_frequency = update_frequency
-        self.one_day_duration = 1440
-        self.__time = 0
-
-    def __str__(self):
-        return f'\n-----------' \
-            f'\n|⏰: {self.get_time_in_human_readable_format()}|' \
-            f'\n-----------'
+        self._update_frequency = update_frequency
 
     @property
+    @abstractmethod
     def hours(self):
         return self.__time // 60
 
     @property
+    @abstractmethod
     def minutes(self):
         return self.__time % 60
 
+    @abstractmethod
     def get_time_in_human_readable_format(self):
-        return f'{self.hours:02}:{self.minutes:02}'
+        pass
 
+    @abstractmethod
     async def tick(self):
-        if self.__time >= self.one_day_duration:
-            self.__time = 0
-        else:
-            self.__time += 1
-
-        await sleep(self.__update_frequency)
+        pass

@@ -2,11 +2,17 @@ import asyncio
 import logging
 from json import load
 
+from tb_energy_emulator.clocks.real_time_clock import RealtimeClock
+from tb_energy_emulator.clocks.simulation_clock import SimulationClock
 from tb_energy_emulator.device import Devices
-from tb_energy_emulator.clock import Clock
 
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+CLOCK_TYPES = {
+    'simulation': SimulationClock,
+    'realtime': RealtimeClock
+}
 
 
 class Emulator:
@@ -18,7 +24,8 @@ class Emulator:
 
         self._config = self.__load_config(config_path)
 
-        self._clock = Clock(float(self._config.get('globalClockUpdateFrequency', 1.0)))
+        clock_type_name = self._config.get('clockType', 'simulation')
+        self._clock = CLOCK_TYPES[clock_type_name](float(self._config.get('globalClockUpdateFrequency', 1.0)))
 
         self._running = False
 

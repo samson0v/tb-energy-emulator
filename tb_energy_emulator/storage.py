@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Dict
+from typing import Any
 
 
 class Storage:
@@ -8,10 +8,6 @@ class Storage:
 
     @abstractmethod
     async def start(self):
-        pass
-
-    @abstractmethod
-    def update_values(self, values: Dict[str, Any]) -> None:
         pass
 
     @abstractmethod

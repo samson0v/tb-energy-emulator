@@ -1,20 +1,17 @@
 import random
+
 from tb_energy_emulator.device import BaseDevice
+from tb_energy_emulator.constants import (
+    MINIMUM_CONSUMPTION,
+    CONSUPTION_BY_TIME,
+)
 
 
 class Consumption(BaseDevice):
-    CONSUPTION_BY_TIME = {
-        tuple(range(0, 6)): 10_000,
-        tuple(range(6, 12)): 15_000,
-        tuple(range(12, 18)): 20_000,
-        tuple(range(18, 24)): 15_000
-    }
-    MINIMUM_CONSUMPTION = 10_000
-
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
-        self.__total_consumption = self.MINIMUM_CONSUMPTION
+        self.__total_consumption = MINIMUM_CONSUMPTION
 
     def __str__(self):
         return f'\n{self.name}: ' \
@@ -88,6 +85,7 @@ class Consumption(BaseDevice):
     def __update_consumption_by_time(self):
         hour = self._clock.hours
 
-        for (r, consumption) in self.CONSUPTION_BY_TIME.items():
+        for (r, consumption) in CONSUPTION_BY_TIME.items():
             if hour in r:
                 self.__total_consumption = consumption
+                break
