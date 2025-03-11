@@ -52,3 +52,8 @@ CONSUPTION_BY_TIME = {
     tuple(range(18, 24)): 15_000
 }
 MINIMUM_CONSUMPTION = 10_000
+
+# Power Transformer Constants
+
+DAILY_RATE_HOURS = (6, 23)
+NIGHT_RATE_HOURS = (23, 6)

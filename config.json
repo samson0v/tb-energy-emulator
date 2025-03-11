@@ -1,6 +1,6 @@
 {
     "storageType": "modbus",
-    "clockType": "realtime",
+    "clockType": "simulation",
     "globalClockUpdateFrequency": 1.0,
     "devices": [
         {
@@ -598,7 +598,7 @@
                 },
                 {
                     "name": "l1_mode",
-                    "initValue": 2,
+                    "initValue": 1,
                     "modbus": {
                         "address": 10,
                         "function_code": 6
@@ -630,6 +630,30 @@
                     "opcua": {
                         "node_id": "ns=1; s=L3Voltage",
                         "name": "L3Voltage"
+                    }
+                },
+                {
+                    "name": "day_consumption",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 13,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=DayConsumption",
+                        "name": "DayConsumption"
+                    }
+                },
+                {
+                    "name": "night_consumption",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 14,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=NightConsumption",
+                        "name": "NightConsumption"
                     }
                 }
             ]

@@ -1,5 +1,6 @@
 from enum import Enum
 
+from tb_energy_emulator.constants import DAILY_RATE_HOURS
 from tb_energy_emulator.device import BaseDevice
 
 
@@ -13,8 +14,12 @@ class PowerTransformer(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
+        self.__last_updated_day_consumption_time = 0
+        self.__last_updated_night_consumption_time = 0
+
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
+            f'\n\tday consumption: {self.day_consumption} Wh, night consumption: {self.night_consumption} Wh' \
             f'\n\tfrequency: {self.frequency} Hz, current: {self.current} A, power output: {self.power} W' \
             f'\n\tinput voltage: ({self.input_voltage_l1}, {self.input_voltage_l2}, {self.input_voltage_l3})' \
             f'\n\toutput voltage: ({self.output_voltage_l1}, {self.output_voltage_l2}, {self.output_voltage_l3})' \
@@ -54,6 +59,7 @@ class PowerTransformer(BaseDevice):
             await self.__update_input_voltage()
             await self.__update_output_voltage()
             await self.__update_power_output()
+            await self.__update_consumptions()
 
     async def __update_current(self):
         self.current.generate_value()
@@ -107,3 +113,21 @@ class PowerTransformer(BaseDevice):
             self.power.value = self.current.value * self.output_voltage_l3.get_value_without_multiplier()
 
         await self._storage.set_value(value=int(self.power.value), **self.power.config)
+
+    async def __update_consumptions(self):
+        hours = self._clock.hours
+        if hours in DAILY_RATE_HOURS:
+            if self.__last_updated_day_consumption_time < hours:
+                await self.__update_consumption(self.day_consumption)
+                self.__last_updated_day_consumption_time = hours
+        else:
+            if self.__last_updated_night_consumption_time < hours:
+                await self.__update_consumption(self.night_consumption)
+                self.__last_updated_night_consumption_time = hours
+
+    async def __update_consumption(self, consumption):
+        consumption.value += self.output_voltage_l1.get_value_without_multiplier()
+        consumption.value += self.output_voltage_l2.get_value_without_multiplier()
+        consumption.value += self.output_voltage_l3.get_value_without_multiplier()
+
+        await self._storage.set_value(value=int(consumption.value), **consumption.config)
