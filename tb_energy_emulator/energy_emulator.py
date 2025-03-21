@@ -35,6 +35,16 @@ class TbEnergyEmulator(Emulator):
             generator = self._devices.get_device_by_name('Generator')
             await generator.update(consumption.needed_consumption)
 
+            batteries = self._devices.get_device_by_name('Batteries')
+            inverter = self._devices.get_device_by_name('Inverter')
+
+            await inverter.update(solar_batteries,
+                                  wind_turbine,
+                                  power_transformer,
+                                  generator,
+                                  batteries,
+                                  consumption)
+
             self._devices.log_values()
 
             await self._clock.tick()

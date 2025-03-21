@@ -1,6 +1,6 @@
 {
     "storageType": "modbus",
-    "clockType": "simulation",
+    "clockType": "realtime",
     "globalClockUpdateFrequency": 1.0,
     "devices": [
         {
@@ -336,15 +336,15 @@
                     }
                 },
                 {
-                    "name": "power_ouput",
+                    "name": "output_power",
                     "initValue": 0,
                     "modbus": {
                         "address": 4,
                         "function_code": 6
                     },
                     "opcua": {
-                        "node_id": "ns=1; s=PowerOuput",
-                        "name": "PowerOuput"
+                        "node_id": "ns=1; s=OutputPower",
+                        "name": "OutputPower"
                     }
                 },
                 {
@@ -604,8 +604,8 @@
                         "function_code": 6
                     },
                     "opcua": {
-                        "node_id": "ns=1; s=L1Voltage",
-                        "name": "L1Voltage"
+                        "node_id": "ns=1; s=L1Mode",
+                        "name": "L1Mode"
                     }
                 },
                 {
@@ -616,8 +616,8 @@
                         "function_code": 6
                     },
                     "opcua": {
-                        "node_id": "ns=1; s=L2Voltage",
-                        "name": "L2Voltage"
+                        "node_id": "ns=1; s=L2Mode",
+                        "name": "L2Mode"
                     }
                 },
                 {
@@ -628,8 +628,8 @@
                         "function_code": 6
                     },
                     "opcua": {
-                        "node_id": "ns=1; s=L3Voltage",
-                        "name": "L3Voltage"
+                        "node_id": "ns=1; s=L3Mode",
+                        "name": "L3Mode"
                     }
                 },
                 {
@@ -654,6 +654,475 @@
                     "opcua": {
                         "node_id": "ns=1; s=NightConsumption",
                         "name": "NightConsumption"
+                    }
+                }
+            ]
+        },
+        {
+            "className": "Batteries",
+            "name": "Batteries",
+            "storageType": "modbus",
+            "modbusSettings": {
+                "port": 5045,
+                "slaveId": 1
+            },
+            "opcuaSettings": {
+                "host": "opc.tcp://0.0.0.0:4845/freeopcua/server/"
+            },
+            "values": [
+                {
+                    "name": "running",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running",
+                        "name": "Running"
+                    }
+                },
+                {
+                    "name": "running_1",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 2,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running1",
+                        "name": "Running1"
+                    }
+                },
+                {
+                    "name": "running_2",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 3,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running2",
+                        "name": "Running2"
+                    }
+                },
+                {
+                    "name": "running_3",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 4,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running3",
+                        "name": "Running3"
+                    }
+                },
+                {
+                    "name": "running_4",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 5,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running4",
+                        "name": "Running4"
+                    }
+                },
+                {
+                    "name": "running_5",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 6,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running5",
+                        "name": "Running5"
+                    }
+                },
+                {
+                    "name": "batteries_mode",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 7,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=BatteriesMode",
+                        "name": "BatteriesMode"
+                    }
+                },
+                {
+                    "name": "level",
+                    "initValue": 100,
+                    "minValue": 0,
+                    "maxValue": 100,
+                    "modbus": {
+                        "address": 8,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Level",
+                        "name": "Level"
+                    }
+                },
+                {
+                    "name": "temperature",
+                    "initValue": 11,
+                    "minValue": 11,
+                    "maxValue": 49,
+                    "modbus": {
+                        "address": 9,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Temperature",
+                        "name": "Temperature"
+                    }
+                },
+                {
+                    "name": "voltage",
+                    "initValue": 46.0,
+                    "minValue": 44.5,
+                    "maxValue": 53.3,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 10,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Voltage",
+                        "name": "Voltage"
+                    }
+                },
+                {
+                    "name": "charge_current",
+                    "initValue": 79,
+                    "minValue": 0,
+                    "maxValue": 99,
+                    "modbus": {
+                        "address": 11,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=ChargeCurrent",
+                        "name": "ChargeCurrent"
+                    }
+                },
+                {
+                    "name": "cycle_count",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 12,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=CycleCount",
+                        "name": "CycleCount"
+                    }
+                },
+                {
+                    "name": "discharge_current",
+                    "initValue": 79,
+                    "minValue": 0,
+                    "maxValue": 99,
+                    "modbus": {
+                        "address": 13,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=DischargeCurrent",
+                        "name": "DischargeCurrent"
+                    }
+                }
+            ]
+        },
+        {
+            "className": "Inverter",
+            "name": "Inverter",
+            "storageType": "modbus",
+            "modbusSettings": {
+                "port": 5046,
+                "slaveId": 1
+            },
+            "opcuaSettings": {
+                "host": "opc.tcp://0.0.0.0:4846/freeopcua/server/"
+            },
+            "values": [
+                {
+                    "name": "running",
+                    "initValue": false,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 5
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Running",
+                        "name": "Running"
+                    }
+                },
+                {
+                    "name": "mode",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 1,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=Mode",
+                        "name": "Mode"
+                    }
+                },
+                {
+                    "name": "input_voltage_l1",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 2,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL1",
+                        "name": "InputVoltageL1"
+                    }
+                },
+                {
+                    "name": "input_voltage_l2",
+                    "initValue": 221,
+                    "maxValue": 229,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 3,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL2",
+                        "name": "InputVoltageL2"
+                    }
+                },
+                {
+                    "name": "input_voltage_l3",
+                    "initValue": 221,
+                    "maxValue": 239,
+                    "minValue": 191,
+                    "multiplier": 10,
+                    "deviation": 4,
+                    "modbus": {
+                        "address": 4,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=InputVoltageL3",
+                        "name": "InputVoltageL3"
+                    }
+                },
+                {
+                    "name": "output_voltage_l1",
+                    "initValue": 221,
+                    "maxValue": 239,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 5,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL1",
+                        "name": "OutputVoltageL1"
+                    }
+                },
+                {
+                    "name": "output_voltage_l2",
+                    "initValue": 221,
+                    "maxValue": 239,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 6,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL2",
+                        "name": "OutputVoltageL2"
+                    }
+                },
+                {
+                    "name": "output_voltage_l3",
+                    "initValue": 221,
+                    "maxValue": 239,
+                    "minValue": 221,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 7,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=OutputVoltageL3",
+                        "name": "OutputVoltageL3"
+                    }
+                },
+                {
+                    "name": "temperature_l1",
+                    "initValue": 11,
+                    "minValue": 11,
+                    "maxValue": 49,
+                    "deviation": 2,
+                    "modbus": {
+                        "address": 8,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=TemperatureL1",
+                        "name": "TemperatureL1"
+                    }
+                },
+                {
+                    "name": "temperature_l2",
+                    "initValue": 11,
+                    "minValue": 11,
+                    "maxValue": 49,
+                    "deviation": 2,
+                    "modbus": {
+                        "address": 9,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=TemperatureL2",
+                        "name": "TemperatureL2"
+                    }
+                },
+                {
+                    "name": "temperature_l3",
+                    "initValue": 11,
+                    "minValue": 11,
+                    "maxValue": 49,
+                    "deviation": 2,
+                    "modbus": {
+                        "address": 10,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=TemperatureL3",
+                        "name": "TemperatureL3"
+                    }
+                },
+                {
+                    "name": "charger_mode",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 11,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; i=ChargerMode",
+                        "name": "ChargerMode"
+                    }
+                },
+                {
+                    "name": "current_l1",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 12,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=CurrentL1",
+                        "name": "CurrentL1"
+                    }
+                },
+                {
+                    "name": "current_l2",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 13,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=CurrentL2",
+                        "name": "CurrentL2"
+                    }
+                },
+                {
+                    "name": "current_l3",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 14,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=CurrentL3",
+                        "name": "CurrentL3"
+                    }
+                },
+                {
+                    "name": "current",
+                    "initValue": 0,
+                    "minValue": 60,
+                    "maxValue": 199,
+                    "deviation": 1,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 15,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Current",
+                        "name": "Current"
+                    }
+                },
+                {
+                    "name": "power_l1",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 16,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=PowerL1",
+                        "name": "PowerL1"
+                    }
+                },
+                {
+                    "name": "power_l2",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 17,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=PowerL2",
+                        "name": "PowerL2"
+                    }
+                },
+                {
+                    "name": "power_l3",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 18,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=PowerL3",
+                        "name": "PowerL3"
+                    }
+                },
+                {
+                    "name": "power",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 19,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Power",
+                        "name": "Power"
                     }
                 }
             ]

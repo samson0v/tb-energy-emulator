@@ -20,7 +20,7 @@ class BaseDevice:
         self.__config = config
         self._clock = clock
         self.__name = config.get('name')
-        self.__log = logging.getLogger(self.__name)
+        self._log = logging.getLogger(self.__name)
         self.__storage_type = storage_type
 
         self.__load_class_attributes()
@@ -38,43 +38,43 @@ class BaseDevice:
         return self.__name
 
     def __load_class_attributes(self):
-        self.__log.info('\tLoading sensors...')
+        self._log.info('\tLoading sensors...')
 
         for sensor_config in self.__config.get('values', []):
             try:
                 sensor_obj = Sensor(self.__storage_type, sensor_config)
-                self.__log.info(f'\t- {sensor_config['name']} sensor added')
+                self._log.info(f'\t- {sensor_config['name']} sensor added')
                 setattr(self, sensor_config['name'], sensor_obj)
             except Exception as e:
-                self.__log.error(f'{sensor_config['name']} sensor loading failed: {e}')
+                self._log.error(f'{sensor_config['name']} sensor loading failed: {e}')
 
-        self.__log.info('\t[✔] Sensors loaded')
+        self._log.info('\t[✔] Sensors loaded')
 
     def __create_storage(self):
-        self.__log.info('\tCreating storage...')
+        self._log.info('\tCreating storage...')
         if self.__storage_type not in STORES:
-            self.__log.error(f'Unknown store type: {self.__storage_type}. Using default: modbus')
+            self._log.error(f'Unknown store type: {self.__storage_type}. Using default: modbus')
             return ModbusStore(self.__config)
 
         storage = STORES[self.__storage_type](self.__config)
 
-        self.__log.info('\t[✔] Storage created')
+        self._log.info('\t[✔] Storage created')
         return storage
 
     async def __init_storage_values(self):
-        self.__log.info('Initializing storage values...')
+        self._log.info('Initializing storage values...')
 
         for value_config in self.__config.get('values', []):
             try:
                 init_value = value_config['initValue']
                 await self._storage.set_value(value=init_value, **value_config[self.__storage_type])
 
-                self.__log.info(f'\t- {value_config['name']} initialized with value: {init_value}')
+                self._log.info(f'\t- {value_config['name']} initialized with value: {init_value}')
             except Exception as e:
-                self.__log.error(f'{value_config['name']} value loading failed: {e}')
+                self._log.error(f'{value_config['name']} value loading failed: {e}')
                 continue
 
-        self.__log.info('[✔] Storage values initialized')
+        self._log.info('[✔] Storage values initialized')
 
     async def start(self):
         await self._storage.start()

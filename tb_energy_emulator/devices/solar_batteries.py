@@ -23,20 +23,20 @@ class SolarBatteries(BaseDevice):
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
             f'\n\tilluminance: {self.illuminance} lx, temperature: {self.temperature} °C' \
-            f'\n\toutput power: {self.power_ouput} W, voltage: {self.voltage} V, current: {self.current} A'
+            f'\n\toutput power: {self.output_power} W, voltage: {self.voltage} V, current: {self.current} A'
 
     async def off(self):
         super().off()
 
         self.illuminance.value = 0
         self.temperature.value = 0
-        self.power_ouput.value = 0
+        self.output_power.value = 0
         self.voltage.value = 0
         self.current.value = 0
 
         await self._storage.set_value(value=self.illuminance.value, **self.illuminance.config)
         await self._storage.set_value(value=self.temperature.value, **self.temperature.config)
-        await self._storage.set_value(value=self.power_ouput.value, **self.power_ouput.config)
+        await self._storage.set_value(value=self.output_power.value, **self.output_power.config)
         await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
         await self._storage.set_value(value=self.current.value, **self.current.config)
 
@@ -71,11 +71,11 @@ class SolarBatteries(BaseDevice):
     async def __update_electrical_performance(self):
         power_output, voltage, current = self.__calculate_power_output(self.illuminance.value, self.temperature.value)
 
-        self.power_ouput.value = power_output
+        self.output_power.value = power_output
         self.voltage.value = voltage
         self.current.value = current
 
-        await self._storage.set_value(value=self.power_ouput.value, **self.power_ouput.config)
+        await self._storage.set_value(value=self.output_power.value, **self.output_power.config)
         await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
         await self._storage.set_value(value=self.current.value, **self.current.config)
 

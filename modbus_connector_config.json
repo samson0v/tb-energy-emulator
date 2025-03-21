@@ -1,5 +1,5 @@
 {
-  "logLevel": "DEBUG",
+  "logLevel": "INFO",
   "master": {
     "slaves": [
       {
@@ -237,6 +237,15 @@
             "objectsCount": 1,
             "address": 5
           }
+        ],
+        "rpc": [
+          {
+            "tag": "setRunning",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 1
+          }
         ]
       },
       {
@@ -294,6 +303,15 @@
             "objectsCount": 1,
             "address": 4,
             "divider": 100
+          }
+        ],
+        "rpc": [
+          {
+            "tag": "setRunning",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 1
           }
         ]
       },
@@ -465,8 +483,354 @@
             "address": 12
           }
         ]
+      },
+      {
+        "host": "0.0.0.0",
+        "port": 5045,
+        "type": "tcp",
+        "method": "socket",
+        "timeout": 3,
+        "byteOrder": "BIG",
+        "wordOrder": "LITTLE",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 1000,
+        "unitId": 1,
+        "deviceName": "Batteries",
+        "deviceType": "default",
+        "connectAttemptTimeMs": 3000,
+        "connectAttemptCount": 3,
+        "waitAfterFailedAttemptsMs": 30000,
+        "attributes": [
+          {
+            "tag": "batteriesMode",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 7
+          }
+        ],
+        "timeseries": [
+          {
+            "tag": "running",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 1
+          },
+          {
+            "tag": "running1",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 2
+          },
+          {
+            "tag": "running2",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 3
+          },
+          {
+            "tag": "running3",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 4
+          },
+          {
+            "tag": "running4",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 5
+          },
+          {
+            "tag": "running5",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 6
+          },
+          {
+            "tag": "level",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 8
+          },
+          {
+            "tag": "temperature",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 9
+          },
+          {
+            "tag": "voltage",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 10,
+            "divider": 10
+          },
+          {
+            "tag": "chargeCurrent",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 11
+          },
+          {
+            "tag": "cycleCount",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 12
+          },
+          {
+            "tag": "dischargeCurrent",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 13
+          }
+        ],
+        "rpc": [
+          {
+            "tag": "setRunning",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 1
+          },
+          {
+            "tag": "setRunning1",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 2
+          },
+          {
+            "tag": "setRunning2",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 3
+          },
+          {
+            "tag": "setRunning3",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 4
+          },
+          {
+            "tag": "setRunning4",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 5
+          },
+          {
+            "tag": "setRunning5",
+            "type": "bit",
+            "functionCode": 5,
+            "objectsCount": 1,
+            "address": 6
+          }
+        ],
+        "attributeUpdates": [
+          {
+            "tag": "batteriesMode",
+            "type": "16int",
+            "functionCode": 6,
+            "objectsCount": 1,
+            "address": 7
+          }
+        ]
+      },
+      {
+        "host": "0.0.0.0",
+        "port": 5046,
+        "type": "tcp",
+        "method": "socket",
+        "timeout": 3,
+        "byteOrder": "BIG",
+        "wordOrder": "LITTLE",
+        "retries": true,
+        "retryOnEmpty": true,
+        "retryOnInvalid": true,
+        "pollPeriod": 1000,
+        "unitId": 1,
+        "deviceName": "Inverter",
+        "deviceType": "default",
+        "connectAttemptTimeMs": 3000,
+        "connectAttemptCount": 3,
+        "waitAfterFailedAttemptsMs": 30000,
+        "attributes": [
+          {
+            "tag": "mode",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 1
+          }
+        ],
+        "timeseries": [
+          {
+            "tag": "running",
+            "type": "bit",
+            "functionCode": 1,
+            "objectsCount": 1,
+            "address": 1
+          },
+          {
+            "tag": "inputVoltageL1",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 2,
+            "divider": 10
+          },
+          {
+            "tag": "inputVoltageL2",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 3,
+            "divider": 10
+          },
+          {
+            "tag": "inputVoltageL3",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 4,
+            "divider": 10
+          },
+          {
+            "tag": "outputVoltageL1",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 5,
+            "divider": 10
+          },
+          {
+            "tag": "outputVoltageL2",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 6,
+            "divider": 10
+          },
+          {
+            "tag": "outputVoltageL3",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 7,
+            "divider": 10
+          },
+          {
+            "tag": "temperatureL1",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 8
+          },
+          {
+            "tag": "temperatureL2",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 9
+          },
+          {
+            "tag": "temperatureL3",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 10
+          },
+          {
+            "tag": "chargerMode",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 11
+          },
+          {
+            "tag": "currentL1",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 12
+          },
+          {
+            "tag": "currentL2",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 13
+          },
+          {
+            "tag": "currentL3",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 14
+          },
+          {
+            "tag": "current",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 15,
+            "divider": 10
+          },
+          {
+            "tag": "powerL1",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 16
+          },
+          {
+            "tag": "powerL2",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 17
+          },
+          {
+            "tag": "powerL3",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 18
+          },
+          {
+            "tag": "power",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 19
+          }
+        ],
+        "attributeUpdates": [
+          {
+            "tag": "mode",
+            "type": "16int",
+            "functionCode": 6,
+            "objectsCount": 1,
+            "address": 1
+          }
+        ]
       }
     ]
-  },
-  "id": "bf705ab0-c332-4246-9f55-905b69c42d47"
+  }
 }

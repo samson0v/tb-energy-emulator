@@ -52,7 +52,7 @@ class Consumption(BaseDevice):
     async def __update_consumption(self):
         self.__update_consumption_by_time()
 
-        (phase_1, phase_2, phase_3) = self.generate_consuptions(self.__total_consumption)
+        phase_1, phase_2, phase_3 = self.generate_consuptions(self.__total_consumption)
 
         self.consumption_l1.value = phase_1
         self.consumption_l2.value = phase_2
