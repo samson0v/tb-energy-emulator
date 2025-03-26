@@ -16,6 +16,10 @@ class SimulationClock(Clock):
             f'\n-----------'
 
     @property
+    def ticks_num_in_hour(self):
+        return 60
+
+    @property
     def hours(self):
         return self.__time // 60
 

@@ -1,10 +1,9 @@
 from tb_energy_emulator.device import BaseDevice
 
 from tb_energy_emulator.constants import (
+    FUEL_VOLUME,
     MINIMUM_FUEL_RATE,
-    FUEL_RATE_BY_CONSUMPTION,
-    GENERATOR_EFFICIENCY,
-    FUEL_ENERGY_DENSITY
+    FUEL_RATE_BY_CONSUMPTION
 )
 
 
@@ -12,9 +11,8 @@ class Generator(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
-        self.__efficiency = GENERATOR_EFFICIENCY
-        self.__fuel_energy_density = FUEL_ENERGY_DENSITY
         self.__fuel_rate = MINIMUM_FUEL_RATE
+        self.__fuel_volume = FUEL_VOLUME
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -34,7 +32,7 @@ class Generator(BaseDevice):
         await self._storage.set_value(value=self.frequency.value, **self.frequency.config)
 
     async def update(self, consuption):
-        await super().update()
+        await self.update_running_status()
 
         if self.running.value:
             await self.__update_oil_temperature()
@@ -44,6 +42,20 @@ class Generator(BaseDevice):
             await self.__update_fuel_level()
         else:
             await self.__decrease_oil_temperature()
+
+    async def update_running_status(self):
+        running = bool(await self._storage.get_value(**self.running.config))
+
+        if running != self.running.value:
+            self.running.value = running
+
+            if running:
+                await self.on(with_init_values=False)
+                self.fuel_level.value = 100
+                await self._storage.set_value(value=self.fuel_level.value, **self.fuel_level.config)
+                self.__fuel_volume = FUEL_VOLUME
+            else:
+                await self.off()
 
     async def __update_oil_temperature(self):
         if self.oil_temperature.value <= self.oil_temperature.max_value:
@@ -56,20 +68,33 @@ class Generator(BaseDevice):
 
         await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
 
-    async def __update_output_power(self, consuption):
-        self.__fuel_rate = FUEL_RATE_BY_CONSUMPTION.get(consuption, MINIMUM_FUEL_RATE)
-        self.output_power.value = int(self.__efficiency * self.__fuel_energy_density * self.__fuel_rate)
-        await self._storage.set_value(value=self.output_power.value, **self.output_power.config)
+    async def __update_output_power(self, consumption):
+        self.__fuel_rate = self.__get_fuel_rate(consumption)
+        self.output_power.value = consumption
+        await self._storage.set_value(value=int(self.output_power.value), **self.output_power.config)
+
+    def __get_fuel_rate(self, consumption):
+        fule_rate = None
+
+        for cons, rate in FUEL_RATE_BY_CONSUMPTION.items():
+            if consumption in cons:
+                fule_rate = rate
+
+        if fule_rate is None:
+            fule_rate = MINIMUM_FUEL_RATE
+
+        return fule_rate
 
     async def __update_fuel_level(self):
-        new_level = self.fuel_level.value - self.__fuel_rate
-        if new_level <= 0:
-            self.fuel_level.value = 0
-            await self.off()
-        else:
-            self.fuel_level.value = new_level
+        self.__fuel_volume -= self.__fuel_rate / self._clock.ticks_num_in_hour
 
-        await self._storage.set_value(value=self.fuel_level.value, **self.fuel_level.config)
+        if self.__fuel_volume <= 0:
+            self.__fuel_volume = 0
+            await self.off()
+
+        self.fuel_level.value = (self.__fuel_volume / FUEL_VOLUME) * 100
+
+        await self._storage.set_value(value=int(self.fuel_level.value), **self.fuel_level.config)
 
     async def __update_frequency(self):
         self.frequency.generate_value()

@@ -6,14 +6,23 @@ class Clock:
         self._update_frequency = update_frequency
 
     @property
+    def update_frequency(self):
+        return self._update_frequency
+
+    @property
+    @abstractmethod
+    def ticks_num_in_hour(self):
+        pass
+
+    @property
     @abstractmethod
     def hours(self):
-        return self.__time // 60
+        pass
 
     @property
     @abstractmethod
     def minutes(self):
-        return self.__time % 60
+        pass
 
     @abstractmethod
     def get_time_in_human_readable_format(self):

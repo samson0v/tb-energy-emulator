@@ -23,7 +23,6 @@ class Batteries(BaseDevice):
         self.__charging = False
         self.__capacity_Wh = CAPACITY_WH
         self.__charging_duration_in_hours = CHARGING_DURATION_IN_HOURS
-        self.__last_updated_level = 0
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -57,7 +56,7 @@ class Batteries(BaseDevice):
             battery.value = True
             await self._storage.set_value(value=battery.value, **battery.config)
 
-    async def update(self, input_power):
+    async def update(self, input_power=0):
         await super().update()
 
         if self.running.value:
@@ -76,27 +75,31 @@ class Batteries(BaseDevice):
             await self._storage.set_value(value=self.cycle_count.value, **self.cycle_count.config)
 
     async def charge(self, input_power):
-        if self.__last_updated_level < self._clock.hours:
-            self.__reset_charging_duration()
+        self.__reset_charging_duration()
 
-            if self.batteries_mode.value == BatteriesMode.KEEP_BATTERY_CHARGED.value:
-                self.__charge_with_keep_battery_charged_mode(input_power)
-            elif self.batteries_mode.value == BatteriesMode.EXTERNAL_CONTROL.value:
-                self.__charge_with_optimized_without_battery_life_mode(input_power)
-            elif self.batteries_mode.value == BatteriesMode.OPTIMIZED_WITHOUT_BATTERY_LIFE.value:
-                self.__charge_with_optimized_without_battery_life_mode(input_power)
-            elif self.batteries_mode.value == BatteriesMode.OPTIMIZED_WITH_BATTERY_LIFE.value:
-                self.__charge_with_optimized_with_battery_life_mode(input_power)
-            else:
-                self._log.warning(f'Unknown batteries mode: {self.batteries_mode.value}. '
-                                  'Using default mode: KEEP BATTERY CHARGED')
-                self.__charge_with_keep_battery_charged_mode(input_power)
+        if input_power > 0:
+            self.__charging = True
+        else:
+            self.__charging = False
 
-            await self._storage.set_value(value=int(self.level.value), **self.level.config)
-            await self._storage.set_value(value=int(self.charge_current.value), **self.charge_current.config)
-            await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
+        input_power = input_power / self._clock.ticks_num_in_hour
 
-            self.__last_updated_level = self._clock.hours
+        if self.batteries_mode.value == BatteriesMode.KEEP_BATTERY_CHARGED.value:
+            self.__charge_with_keep_battery_charged_mode(input_power)
+        elif self.batteries_mode.value == BatteriesMode.EXTERNAL_CONTROL.value:
+            self.__charge_with_optimized_without_battery_life_mode(input_power)
+        elif self.batteries_mode.value == BatteriesMode.OPTIMIZED_WITHOUT_BATTERY_LIFE.value:
+            self.__charge_with_optimized_without_battery_life_mode(input_power)
+        elif self.batteries_mode.value == BatteriesMode.OPTIMIZED_WITH_BATTERY_LIFE.value:
+            self.__charge_with_optimized_with_battery_life_mode(input_power)
+        else:
+            self._log.warning(f'Unknown batteries mode: {self.batteries_mode.value}. '
+                              'Using default mode: KEEP BATTERY CHARGED')
+            self.__charge_with_keep_battery_charged_mode(input_power)
+
+        await self._storage.set_value(value=int(self.level.value), **self.level.config)
+        await self._storage.set_value(value=int(self.charge_current.value), **self.charge_current.config)
+        await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
 
     async def discharge(self, input_power):
         output_power = await self.__discharge(input_power)
@@ -111,6 +114,10 @@ class Batteries(BaseDevice):
         output_power = 0
 
         if self.level.value > 0:
+            output_power = input_power
+
+            input_power = input_power / self._clock.ticks_num_in_hour
+
             self.discharge_current.value = input_power / self.voltage.get_value_without_multiplier()
 
             if self.discharge_current.value > self.discharge_current.max_value:
@@ -123,8 +130,6 @@ class Batteries(BaseDevice):
             if new_energy_Wh < 0:
                 new_energy_Wh = 0
                 output_power = 0
-            else:
-                output_power = input_power
 
             self.level.value = (new_energy_Wh / self.__capacity_Wh) * 100
 
@@ -132,7 +137,7 @@ class Batteries(BaseDevice):
 
     def __charge_with_keep_battery_charged_mode(self, input_power):
         if self.level.value < 100 and input_power > 0:
-            self.__calculate_charge_current(input_power)
+            self.__calculate_charge_current()
 
             energy_added_Wh = input_power * self.__charging_duration_in_hours
             current_energy_Wh = (self.level.value / 100) * self.__capacity_Wh
@@ -145,7 +150,7 @@ class Batteries(BaseDevice):
 
     def __charge_with_optimized_with_battery_life_mode(self, input_power):
         if self.level.value < MAX_CHARGING_LEVEL_WITH_BATTERY_LIFE and input_power > 0:
-            self.__calculate_charge_current(input_power)
+            self.__calculate_charge_current()
 
             energy_added_Wh = input_power * self.__charging_duration_in_hours
             current_energy_Wh = (self.level.value / 100) * self.__capacity_Wh
@@ -172,14 +177,10 @@ class Batteries(BaseDevice):
 
             self.level.value = (new_energy_Wh / self.__capacity_Wh) * 100
 
-    def __calculate_charge_current(self, input_power):
+    def __calculate_charge_current(self):
         if self.level.value <= 85:
-            self.charge_current.value = input_power / self.voltage.get_value_without_multiplier()
-
-            if self.charge_current.value > self.charge_current.max_value:
-                input_power = self.charge_current.max_value * self.voltage.get_value_without_multiplier()
-                self.charge_current.value = self.charge_current.max_value
-        elif 85 < self.level.value >= 95:
+            self.charge_current.value = 79
+        elif 85 < self.level.value <= 95:
             self.charge_current.value = 30
         elif self.level.value > 95 and self.level.value < 100:
             self.charge_current.value = 10

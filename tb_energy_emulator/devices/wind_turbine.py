@@ -32,6 +32,12 @@ class WindTurbine(BaseDevice):
     async def off(self):
         await super().off()
 
+        self.output_power.value = 0
+        self.rotor_speed.value = 0
+
+        await self._storage.set_value(value=self.output_power.value, **self.output_power.config)
+        await self._storage.set_value(value=self.rotor_speed.value, **self.rotor_speed.config)
+
     async def __update_wind_direction(self):
         self.wind_direction.value = (self.wind_direction.value / 100) + 0.24
         if self.wind_direction.value / 100 >= 360:

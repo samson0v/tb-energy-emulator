@@ -1,4 +1,5 @@
 import math
+import random
 
 from tb_energy_emulator.device import BaseDevice
 from tb_energy_emulator.constants import (
@@ -20,13 +21,15 @@ class SolarBatteries(BaseDevice):
         self.__C_v = SOLAR_BATTERIES_C_V
         self.__I_sc = SOLAR_BATTERIES_I_SC_REF
 
+        self.__last_updated_illuminance_time = 0
+
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
             f'\n\tilluminance: {self.illuminance} lx, temperature: {self.temperature} °C' \
             f'\n\toutput power: {self.output_power} W, voltage: {self.voltage} V, current: {self.current} A'
 
     async def off(self):
-        super().off()
+        await super().off()
 
         self.illuminance.value = 0
         self.temperature.value = 0
@@ -51,10 +54,17 @@ class SolarBatteries(BaseDevice):
     async def __update_lux_by_time(self):
         hour = self._clock.hours
 
-        for (r, lux) in LUX_BY_TIME.items():
-            if hour in r:
-                self.illuminance.value = lux
-                break
+        if self.__last_updated_illuminance_time != hour:
+            for (r, lux) in LUX_BY_TIME.items():
+                if hour in r:
+                    self.illuminance.value = lux
+                    self.__last_updated_illuminance_time = hour
+                    break
+        else:
+            min_value = self.illuminance.value - 50
+            max_value = self.illuminance.value + 50
+            new_number = self.illuminance.value + random.randint(-3, 3)
+            self.illuminance.value = max(min_value, min(max_value, new_number))
 
         await self._storage.set_value(value=int(self.illuminance.value / 10), **self.illuminance.config)
 

@@ -16,6 +16,10 @@ class RealtimeClock(Clock):
             f'\n-----------'
 
     @property
+    def ticks_num_in_hour(self):
+        return 3600
+
+    @property
     def hours(self):
         return self.__time.hour
 

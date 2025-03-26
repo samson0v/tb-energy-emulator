@@ -14,6 +14,7 @@ class PowerTransformer(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
+        self.__max_output_power = 49_000
         self.__last_updated_day_consumption_time = 0
         self.__last_updated_night_consumption_time = 0
 
@@ -50,7 +51,7 @@ class PowerTransformer(BaseDevice):
         await self._storage.set_value(value=self.output_voltage_l2.value, **self.output_voltage_l2.config)
         await self._storage.set_value(value=self.output_voltage_l3.value, **self.output_voltage_l3.config)
 
-    async def update(self):
+    async def update(self, input_power=0):
         await super().update()
 
         if self.running.value:
@@ -58,8 +59,11 @@ class PowerTransformer(BaseDevice):
             await self.__update_frequency()
             await self.__update_input_voltage()
             await self.__update_output_voltage()
-            await self.__update_power_output()
+            await self.__update_power_output(input_power)
             await self.__update_consumptions()
+
+    async def update_running_status(self):
+        await super().update()
 
     async def __update_current(self):
         self.current.generate_value()
@@ -104,15 +108,19 @@ class PowerTransformer(BaseDevice):
         if phase_mode_updated != phase_mode.value:
             phase_mode.value = phase_mode_updated
 
-    async def __update_power_output(self):
-        if self.l1_mode.value == PhaseMode.ON.value:
-            self.power.value = self.current.value * self.output_voltage_l1.get_value_without_multiplier()
-        elif self.l2_mode.value == PhaseMode.ON.value:
-            self.power.value = self.current.value * self.output_voltage_l2.get_value_without_multiplier()
-        elif self.l3_mode.value == PhaseMode.ON.value:
-            self.power.value = self.current.value * self.output_voltage_l3.get_value_without_multiplier()
+    async def __update_power_output(self, input_power):
+        max_power_output = self.__get_max_power_output()
+        if input_power > max_power_output:
+            self.power.value = max_power_output
+        else:
+            self.power.value = input_power
 
         await self._storage.set_value(value=int(self.power.value), **self.power.config)
+
+    def __get_max_power_output(self):
+        running_phases_num = tuple(filter(lambda x: x.value == PhaseMode.ON.value or x.value == PhaseMode.BYPASS.value,
+                                          [self.l1_mode, self.l2_mode, self.l3_mode]))
+        return self.__max_output_power / len(running_phases_num)
 
     async def __update_consumptions(self):
         hours = self._clock.hours

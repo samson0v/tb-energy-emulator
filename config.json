@@ -158,6 +158,20 @@
                         "node_id": "ns=1; s=ConsumptionL3",
                         "name": "ConsumptionL3"
                     }
+                },
+                {
+                    "name": "consumption",
+                    "initValue": 10000,
+                    "maxValue": 25000,
+                    "minValue": 0,
+                    "modbus": {
+                        "address": 10,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=Consumption",
+                        "name": "Consumption"
+                    }
                 }
             ]
         },
@@ -205,7 +219,6 @@
                     "maxValue": 50.4,
                     "minValue": 49.6,
                     "multiplier": 10,
-                    "deviation": 0.2,
                     "modbus": {
                         "address": 2,
                         "function_code": 6
@@ -247,9 +260,7 @@
                 },
                 {
                     "name": "output_power",
-                    "initValue": 20000,
-                    "maxValue": 23000,
-                    "minValue": 20000,
+                    "initValue": 0,
                     "modbus": {
                         "address": 5,
                         "function_code": 6

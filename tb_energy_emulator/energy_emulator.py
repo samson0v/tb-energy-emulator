@@ -21,7 +21,7 @@ class TbEnergyEmulator(Emulator):
             self._log.info(f'{self._clock}')
 
             power_transformer = self._devices.get_device_by_name('Power Transformer')
-            await power_transformer.update()
+            await power_transformer.update_running_status()
 
             wind_turbine = self._devices.get_device_by_name('Wind Turbine')
             await wind_turbine.update()
@@ -29,12 +29,10 @@ class TbEnergyEmulator(Emulator):
             solar_batteries = self._devices.get_device_by_name('Solar Batteries')
             await solar_batteries.update()
 
-            consumption = self._devices.get_device_by_name('Consumption')
-            await consumption.update()
-
             generator = self._devices.get_device_by_name('Generator')
-            await generator.update(consumption.needed_consumption)
+            await generator.update_running_status()
 
+            consumption = self._devices.get_device_by_name('Consumption')
             batteries = self._devices.get_device_by_name('Batteries')
             inverter = self._devices.get_device_by_name('Inverter')
 
@@ -51,7 +49,8 @@ class TbEnergyEmulator(Emulator):
 
 
 if __name__ == '__main__':
-    emulator = TbEnergyEmulator(config_path='/Users/vitaliibidochka/Documents/Python Projects/tb-energy-emulator/config.json')
+    config_path = '/Users/vitaliibidochka/Documents/Python Projects/tb-energy-emulator/config.json'
+    emulator = TbEnergyEmulator(config_path=config_path)
 
     try:
         asyncio.run(emulator.run())

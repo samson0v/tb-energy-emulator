@@ -21,6 +21,9 @@ class Inverter(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
+        self.__only_charge_batteries = False
+        self.__green_energy_system_off = False
+
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
             f'\n\tmode: {self.mode}' \
@@ -76,92 +79,203 @@ class Inverter(BaseDevice):
         await super().update()
         await self.__check_and_update_mode()
 
-        if self.running.value:
-            await self.__update_input_voltage()
-            await self.__update_output_voltage()
-            await self.__update_temperatures()
+        await self.__update_input_voltage()
+        await self.__update_output_voltage()
+        await self.__update_temperatures()
 
-            await self.get_output(solar_batteries,
+        await self.get_output(solar_batteries,
+                              wind_turbine,
+                              power_transformer,
+                              generator,
+                              batteries,
+                              consumption)
+        await self.__update_output_current()
+        await self.__update_output_power()
+
+    async def get_output(self, solar_batteries, wind_turbine, power_transformer, generator, batteries, consumption):
+        self.power.value = 0  # NOTE: consumption output
+
+        if self.mode.value == Mode.INVERTER_ONLY.value:
+            await power_transformer.update(0)
+            await self.__on_green_energy(solar_batteries, wind_turbine)
+            await self.__inverter_only_mode(solar_batteries,
+                                            wind_turbine,
+                                            generator,
+                                            batteries,
+                                            consumption)
+        elif self.mode.value == Mode.CHARGER_ONLY.value:
+            await self.__on_green_energy(solar_batteries, wind_turbine)
+            await self.__charger_only_mode(solar_batteries,
+                                           wind_turbine,
+                                           power_transformer,
+                                           generator,
+                                           batteries,
+                                           consumption)
+        elif self.mode.value == Mode.ON.value:
+            await self.__on_green_energy(solar_batteries, wind_turbine)
+            await self.__on_mode(solar_batteries, wind_turbine, batteries, power_transformer, consumption)
+        elif self.mode.value == Mode.OFF.value:
+            await self.__off_green_evergy(solar_batteries, wind_turbine)
+            await self.__off_mode(generator, power_transformer, consumption)
+
+        await self._storage.set_value(value=int(self.power.value), **self.power.config)
+
+        await batteries.update()
+        await self.__manage_consumption(consumption)
+
+    async def __manage_consumption(self, consumption):
+        if self.power.value == 0:
+            await consumption.off()
+        else:
+            await consumption.on(with_init_values=False)
+
+        await consumption.update(self.power.value)
+
+    async def __on_green_energy(self, solar_batteries, wind_turbine):
+        if self.__green_energy_system_off:
+            await solar_batteries.on()
+            await wind_turbine.on()
+
+            self.__green_energy_system_off = False
+
+    async def __off_green_evergy(self, solar_batteries, wind_turbine):
+        if solar_batteries.running.value:
+            self.__green_energy_system_off = True
+            await solar_batteries.off()
+
+        if wind_turbine.running.value:
+            self.__green_energy_system_off = True
+            await wind_turbine.off()
+
+    async def __inverter_only_mode(self, solar_batteries, wind_turbine, generator, batteries, consumption):
+        total_output_power = 0
+
+        total_output_power += solar_batteries.output_power.value
+        total_output_power += wind_turbine.output_power.value
+
+        if total_output_power < consumption.needed_consumption:
+            if batteries.running.value:
+                needed_power = consumption.needed_consumption - total_output_power
+                total_output_power += await batteries.discharge(needed_power)
+
+        if total_output_power < consumption.needed_consumption:
+            if generator.running.value:
+                generator_input = consumption.needed_consumption - total_output_power
+                await generator.update(generator_input)
+                total_output_power += generator_input
+        else:
+            await generator.update(0)
+
+        if total_output_power >= consumption.needed_consumption:
+            self.power.value = consumption.needed_consumption
+        else:
+            self.power.value = total_output_power
+
+    async def __charger_only_mode(self,
+                                  solar_batteries,
                                   wind_turbine,
                                   power_transformer,
                                   generator,
                                   batteries,
-                                  consumption)
-            await self.__update_output_current()
-            await self.__update_output_power()
-        else:
-            await self.__decrease_temperatures()
-
-    async def get_output(self, solar_batteries, wind_turbine, power_transformer, generator, batteries, consumption):
-        batteries_input = 0
-        self.power.value = 0  # NOTE: consumption output
-
-        if self.mode.value == Mode.INVERTER_ONLY.value:
-            batteries_input = 0
-            self.power.value = await batteries.discharge(consumption.needed_consumption)
-        elif self.mode.value == Mode.CHARGER_ONLY.value:
-            batteries_input = self.get_power_for_batteries_charging(solar_batteries,
-                                                                    wind_turbine,
-                                                                    power_transformer,
-                                                                    generator)
-
-            await batteries.update(batteries_input)
-            await self.update_charger_mode(batteries.charge_current.value)
-
-            self.power.value = 0
-        elif self.mode.value == Mode.ON.value:
-            batteries_input = self.get_power_for_batteries_charging(solar_batteries,
-                                                                    wind_turbine,
-                                                                    power_transformer,
-                                                                    generator)
-
-            await batteries.update(batteries_input)
-            await self.update_charger_mode(batteries.charge_current.value)
-            self.power.value = await batteries.discharge(consumption.needed_consumption)
-
-            if self.power.value < consumption.needed_consumption:
-                needed_power = consumption.needed_consumption - self.power.value
-                self.power.value = self.find_power_for_consumption(generator,
+                                  consumption):
+        needed_power = consumption.needed_consumption + 2000 if batteries.level.value < 100 else consumption.needed_consumption
+        total_power_output = await self.get_power_from_all_sources(solar_batteries,
+                                                                   wind_turbine,
                                                                    power_transformer,
+                                                                   generator,
                                                                    needed_power)
 
-        await self._storage.set_value(value=int(self.power.value), **self.power.config)
+        if batteries.level.value < 100:
+            batteries_input = total_power_output - consumption.needed_consumption if total_power_output > consumption.needed_consumption else 0
+            total_power_output -= batteries_input
+            await batteries.update(batteries_input)
+            await self.update_charger_mode(batteries.charge_current.value)
 
-        if consumption.needed_consumption > self.power.value:
-            consumption.off()
+        if total_power_output >= consumption.needed_consumption:
+            self.power.value = consumption.needed_consumption
         else:
-            consumption.on(with_init_values=False)
+            self.power.value = total_power_output
 
-    def get_power_for_batteries_charging(self, solar_batteries, wind_turbine, power_transformer, generator):
+    async def __on_mode(self, solar_batteries, wind_turbine, batteries, power_transformer, consumption):
         total_power_output = 0
 
-        if solar_batteries.output_power.value > 0:
-            total_power_output += solar_batteries.output_power.value
+        total_power_output += solar_batteries.output_power.value
+        total_power_output += wind_turbine.output_power.value
 
-        if wind_turbine.output_power.value > 0:
-            total_power_output += wind_turbine.output_power.value
+        if total_power_output >= consumption.needed_consumption:
+            batteries_input = total_power_output - consumption.needed_consumption
+            await batteries.update(batteries_input)
+            await self.update_charger_mode(batteries.charge_current.value)
+            self.power.value = consumption.needed_consumption
+        else:
+            needed_power = consumption.needed_consumption - total_power_output
 
-        if total_power_output == 0:
-            if power_transformer.power.value > 0:
+            if self.__only_charge_batteries and batteries.level.value >= 80:
+                self.__only_charge_batteries = False
+
+            if batteries.level.value > 50 and batteries.running.value and not self.__only_charge_batteries:
+                total_power_output += await batteries.discharge(needed_power)
+                self.power.value = consumption.needed_consumption
+                await power_transformer.update(0)
+            else:
+                self.__only_charge_batteries = True if batteries.running.value else False
+                needed_power = needed_power + 2000 if batteries.level.value < 100 and batteries.running.value else needed_power
+                await power_transformer.update(needed_power)
                 total_power_output += power_transformer.power.value
 
-        if total_power_output == 0:
-            if generator.output_power.value > 0:
-                total_power_output += generator.output_power.value
+                if total_power_output < consumption.needed_consumption:
+                    self.power.value = total_power_output
+                else:
+                    self.power.value = consumption.needed_consumption
 
-        return total_power_output
+                    batteries_input = total_power_output - consumption.needed_consumption
+                    await batteries.update(batteries_input)
+                    await self.update_charger_mode(batteries.charge_current.value)
 
-    def find_power_for_consumption(self, generator, power_transformer, needed_power):
+    async def __off_mode(self, generator, power_transformer, consumption):
+        self.power.value = await self.find_power_for_consumption(generator,
+                                                                 power_transformer,
+                                                                 consumption.needed_consumption)
+
+    async def find_power_for_consumption(self, generator, power_transformer, needed_power):
         output_power = 0
 
-        if generator.output_power.value > 0:
-            output_power += generator.output_power.value
+        await power_transformer.update(needed_power)
+        if power_transformer.power.value > 0:
+            output_power += power_transformer.power.value
 
-        if output_power < needed_power:
-            if power_transformer.power.value > 0:
-                output_power += power_transformer.power.value
+        if needed_power > output_power:
+            if generator.running.value:
+                await generator.update(needed_power - output_power)
+                output_power = needed_power
+        else:
+            await generator.update(0)
 
         return output_power
+
+    async def get_power_from_all_sources(self,
+                                         solar_batteries,
+                                         wind_turbine,
+                                         power_transformer,
+                                         generator,
+                                         needed_power):
+        total_power_output = 0
+
+        total_power_output += solar_batteries.output_power.value
+        total_power_output += wind_turbine.output_power.value
+
+        if total_power_output < needed_power:
+            await power_transformer.update(needed_power - total_power_output)
+            total_power_output += power_transformer.power.value
+
+            if total_power_output < needed_power:
+                if generator.running.value:
+                    await generator.update(needed_power - total_power_output)
+                    total_power_output = needed_power
+            else:
+                await generator.update(0)
+
+        return total_power_output
 
     async def __check_and_update_mode(self):
         mode = await self._storage.get_value(**self.mode.config)
@@ -233,6 +347,8 @@ class Inverter(BaseDevice):
             self.charger_mode.value = ChargeMode.ABSORPTION.value
         else:
             self.charger_mode.value = ChargeMode.FLOAT.value
+
+        await self._storage.set_value(value=self.charger_mode.value, **self.charger_mode.config)
 
     async def __update_output_current(self):
         self.current.generate_value()

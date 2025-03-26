@@ -15,32 +15,39 @@ TEMPERATURE_BY_TIME = {
 
 SOLAR_BATTERIES_V_CELL = 1.67
 SOLAR_BATTERIES_C_V = -0.002
-SOLAR_BATTERIES_NUM_CELLS = 36
-SOLAR_BATTERIES_I_SC_REF = 10
+SOLAR_BATTERIES_NUM_CELLS = 260
+SOLAR_BATTERIES_I_SC_REF = 9
 
 # Wind Turbine Constants
 
 WIND_SPEED_BY_TIME = {
-    tuple(range(0, 6)): (15, 25),
-    tuple(range(6, 12)): (3, 5),
-    tuple(range(12, 18)): (10, 20),
-    tuple(range(18, 24)): (5, 10)
+    tuple(range(0, 2)): (15, 17),
+    tuple(range(2, 4)): (17, 20),
+    tuple(range(4, 6)): (21, 25),
+    tuple(range(6, 8)): (3, 4),
+    tuple(range(8, 10)): (4, 5),
+    tuple(range(10, 12)): (1, 2),
+    tuple(range(12, 14)): (2, 3),
+    tuple(range(14, 16)): (3, 5),
+    tuple(range(16, 18)): (5, 7),
+    tuple(range(18, 20)): (7, 9),
+    tuple(range(20, 22)): (9, 11),
+    tuple(range(22, 24)): (12, 15)
 }
 
-ROTOR_RADIUS = 0.7
+ROTOR_RADIUS = 1.0
 TIP_SPEED_RATIO = 7
 
 # Generator Constants
 
 FUEL_RATE_BY_CONSUMPTION = {
-    10000: 3,
-    15_000: 8,
-    20_000: 13
+    tuple(range(0, 10_000)): 3,
+    tuple(range(10_000, 15_000)): 8,
+    tuple(range(15_000, 21_000)): 13
 }
 
 MINIMUM_FUEL_RATE = 3
-GENERATOR_EFFICIENCY = 0.85
-FUEL_ENERGY_DENSITY = 34.2
+FUEL_VOLUME = 60
 
 # Consamption Constants
 
