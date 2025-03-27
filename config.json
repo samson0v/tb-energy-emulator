@@ -1,6 +1,6 @@
 {
     "storageType": "modbus",
-    "clockType": "realtime",
+    "clockType": "simulation",
     "globalClockUpdateFrequency": 1.0,
     "devices": [
         {
@@ -282,6 +282,32 @@
                     "opcua": {
                         "node_id": "ns=1; s=Current",
                         "name": "Current"
+                    }
+                },
+                {
+                    "name": "current_session_duration",
+                    "initValue": 0,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 7,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=CurrentSessionDuration",
+                        "name": "CurrentSessionDuration"
+                    }
+                },
+                {
+                    "name": "total_working_duration",
+                    "initValue": 0,
+                    "multiplier": 10,
+                    "modbus": {
+                        "address": 8,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=TotalWorkingDuration",
+                        "name": "TotalWorkingDuration"
                     }
                 }
             ]
@@ -1077,7 +1103,6 @@
                     "initValue": 0,
                     "minValue": 60,
                     "maxValue": 199,
-                    "deviation": 1,
                     "multiplier": 10,
                     "modbus": {
                         "address": 15,

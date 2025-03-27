@@ -178,6 +178,22 @@
             "functionCode": 3,
             "objectsCount": 1,
             "address": 6
+          },
+          {
+            "tag": "currentSessionDuration",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 7,
+            "divider": 10
+          },
+          {
+            "tag": "totalWorkingHours",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 8,
+            "divider": 10
           }
         ],
         "rpc": [
