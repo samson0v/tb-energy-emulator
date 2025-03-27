@@ -1,6 +1,6 @@
 {
     "storageType": "modbus",
-    "clockType": "simulation",
+    "clockType": "realtime",
     "globalClockUpdateFrequency": 1.0,
     "devices": [
         {

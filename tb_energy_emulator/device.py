@@ -43,10 +43,10 @@ class BaseDevice:
         for sensor_config in self.__config.get('values', []):
             try:
                 sensor_obj = Sensor(self.__storage_type, sensor_config)
-                self._log.info(f'\t- {sensor_config['name']} sensor added')
+                self._log.info(f'\t- {sensor_config["name"]} sensor added')
                 setattr(self, sensor_config['name'], sensor_obj)
             except Exception as e:
-                self._log.error(f'{sensor_config['name']} sensor loading failed: {e}')
+                self._log.error(f'{sensor_config["name"]} sensor loading failed: {e}')
 
         self._log.info('\t[✔] Sensors loaded')
 
@@ -69,9 +69,9 @@ class BaseDevice:
                 init_value = value_config['initValue']
                 await self._storage.set_value(value=init_value, **value_config[self.__storage_type])
 
-                self._log.info(f'\t- {value_config['name']} initialized with value: {init_value}')
+                self._log.info(f'\t- {value_config["name"]} initialized with value: {init_value}')
             except Exception as e:
-                self._log.error(f'{value_config['name']} value loading failed: {e}')
+                self._log.error(f'{value_config["name"]} value loading failed: {e}')
                 continue
 
         self._log.info('[✔] Storage values initialized')
@@ -120,10 +120,10 @@ class Devices:
         for device_config in config.get('devices', []):
             device_class = DeviceModuleLoader.import_module(device_config.get('className', 'name'))
             if not issubclass(device_class, BaseDevice):
-                self.__log.error(f'\t{device_config['name']} device loading failed: {device_class}')
+                self.__log.error(f'\t{device_config["name"]} device loading failed: {device_class}')
                 continue
 
-            self.__log.info(f'\tLoading {device_config['name']} device...')
+            self.__log.info(f'\tLoading {device_config["name"]} device...')
 
             storage_type = device_config.get('storageType', config.get('storeType', 'modbus'))
             device = device_class(device_config, storage_type, clock)

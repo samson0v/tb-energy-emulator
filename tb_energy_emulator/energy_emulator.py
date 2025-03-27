@@ -49,7 +49,7 @@ class TbEnergyEmulator(Emulator):
 
 
 if __name__ == '__main__':
-    config_path = '/Users/vitaliibidochka/Documents/Python Projects/tb-energy-emulator/config.json'
+    config_path = './config.json'
     emulator = TbEnergyEmulator(config_path=config_path)
 
     try:

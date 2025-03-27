@@ -7,8 +7,7 @@ ADD . /
 ENV PATH="/root/.local/bin:$PATH"
 ENV PYTHONPATH=.
 
-EXPOSE 5021 5022 5037 5038 5039
-EXPOSE 4840 4841
+EXPOSE 5040 5041 5042 5043 5044 5045 5046
 
 # Install Python packages
 COPY requirements.txt .
