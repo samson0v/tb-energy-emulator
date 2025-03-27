@@ -89,8 +89,8 @@ class Inverter(BaseDevice):
                               generator,
                               batteries,
                               consumption)
-        await self.__update_output_current()
         await self.__update_output_power()
+        await self.__update_output_current()
 
     async def get_output(self, solar_batteries, wind_turbine, power_transformer, generator, batteries, consumption):
         self.power.value = 0  # NOTE: consumption output
@@ -351,17 +351,22 @@ class Inverter(BaseDevice):
         await self._storage.set_value(value=self.charger_mode.value, **self.charger_mode.config)
 
     async def __update_output_current(self):
-        self.current.generate_value()
-        current_1, current_2, current_3 = self.distibute_value(self.current.get_value_without_multiplier())
+        self.current_l1.value = self.__calculate_current(self.power_l1.value,
+                                                         self.output_voltage_l1.get_value_without_multiplier())
+        self.current_l2.value = self.__calculate_current(self.power_l2.value,
+                                                         self.output_voltage_l2.get_value_without_multiplier())
+        self.current_l3.value = self.__calculate_current(self.power_l3.value,
+                                                         self.output_voltage_l3.get_value_without_multiplier())
 
-        self.current_l1.value = current_1
-        self.current_l2.value = current_2
-        self.current_l3.value = current_3
+        self.current.value = round(self.current_l1.value + self.current_l2.value + self.current_l3.value, 1)
 
         await self._storage.set_value(value=self.current.value, **self.current.config)
         await self._storage.set_value(value=int(self.current_l1.value), **self.current_l1.config)
         await self._storage.set_value(value=int(self.current_l2.value), **self.current_l2.config)
         await self._storage.set_value(value=int(self.current_l3.value), **self.current_l3.config)
+
+    def __calculate_current(self, power, voltage):
+        return power / voltage
 
     async def __update_output_power(self):
         power_1, power_2, power_3 = self.distibute_value(self.power.value)

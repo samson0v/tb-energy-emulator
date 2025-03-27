@@ -8,7 +8,8 @@ class SimulationClock(Clock):
         super().__init__(update_frequency=update_frequency)
 
         self.one_day_duration = 1440
-        self.__time = 0
+        self.__time = 60
+        self.__timestamp = 0
 
     def __str__(self):
         return f'\n-----------' \
@@ -27,6 +28,10 @@ class SimulationClock(Clock):
     def minutes(self):
         return self.__time % 60
 
+    @property
+    def time(self):
+        return self.__timestamp
+
     def get_time_in_human_readable_format(self):
         return f'{self.hours:02}:{self.minutes:02}'
 
@@ -35,5 +40,7 @@ class SimulationClock(Clock):
             self.__time = 0
         else:
             self.__time += 1
+
+        self.__timestamp += int(1 * self._update_frequency)
 
         await sleep(self._update_frequency)

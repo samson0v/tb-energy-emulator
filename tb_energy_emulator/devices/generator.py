@@ -14,14 +14,23 @@ class Generator(BaseDevice):
         self.__fuel_rate = MINIMUM_FUEL_RATE
         self.__fuel_volume = FUEL_VOLUME
 
+        self.__start_time = 0
+        self.__end_time = 0
+
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
             f'\n\ttemperature: {self.oil_temperature} °C, voltage: {self.voltage} V, frequency: {self.frequency} Hz' \
             f'\n\toutput power: {self.output_power} W, ' \
             f'fuel level: {self.fuel_level} %, fuel rate: {self.__fuel_rate} l/h'
 
+    async def on(self, with_init_values=True):
+        await super().on(with_init_values)
+
+        self.__start_time = self._clock.time
+
     async def off(self):
         await super().off()
+        await self.__update_operating_hours()
 
         self.voltage.value = 0
         self.output_power.value = 0
@@ -30,6 +39,17 @@ class Generator(BaseDevice):
         await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
         await self._storage.set_value(value=self.output_power.value, **self.output_power.config)
         await self._storage.set_value(value=self.frequency.value, **self.frequency.config)
+
+    async def __update_operating_hours(self):
+        self.__end_time = self._clock.time
+
+        timestamp = round((self.__end_time - self.__start_time) / self._clock.ticks_num_in_hour, 1)
+
+        self.total_working_duration.value = self.total_working_duration.get_value_without_multiplier() + timestamp
+        self.current_session_duration.value = timestamp
+
+        await self._storage.set_value(value=self.total_working_duration.value, **self.total_working_duration.config)
+        await self._storage.set_value(value=self.current_session_duration.value, **self.current_session_duration.config)
 
     async def update(self, consuption):
         await self.update_running_status()

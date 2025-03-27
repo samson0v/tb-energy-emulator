@@ -31,6 +31,8 @@ class SolarBatteries(BaseDevice):
     async def off(self):
         await super().off()
 
+        self.__last_updated_illuminance_time = 0
+
         self.illuminance.value = 0
         self.temperature.value = 0
         self.output_power.value = 0
@@ -61,9 +63,9 @@ class SolarBatteries(BaseDevice):
                     self.__last_updated_illuminance_time = hour
                     break
         else:
-            min_value = self.illuminance.value - 50
-            max_value = self.illuminance.value + 50
-            new_number = self.illuminance.value + random.randint(-3, 3)
+            min_value = self.illuminance.value - 100
+            max_value = self.illuminance.value + 100
+            new_number = self.illuminance.value + random.randint(-5, 5)
             self.illuminance.value = max(min_value, min(max_value, new_number))
 
         await self._storage.set_value(value=int(self.illuminance.value / 10), **self.illuminance.config)

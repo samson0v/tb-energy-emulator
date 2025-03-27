@@ -27,6 +27,10 @@ class RealtimeClock(Clock):
     def minutes(self):
         return self.__time.minute
 
+    @property
+    def time(self):
+        return int(datetime.datetime.now().timestamp())
+
     def get_time_in_human_readable_format(self):
         return self.__time.strftime('%H:%M')
 

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from tb_energy_emulator.constants import DAILY_RATE_HOURS
+from tb_energy_emulator.constants import DAILY_RATE_HOURS, MAX_OUTPUT_POWER
 from tb_energy_emulator.device import BaseDevice
 
 
@@ -14,7 +14,7 @@ class PowerTransformer(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
-        self.__max_output_power = 49_000
+        self.__max_output_power = MAX_OUTPUT_POWER
         self.__last_updated_day_consumption_time = 0
         self.__last_updated_night_consumption_time = 0
 

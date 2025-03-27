@@ -24,6 +24,11 @@ class Clock:
     def minutes(self):
         pass
 
+    @property
+    @abstractmethod
+    def time(self):
+        pass
+
     @abstractmethod
     def get_time_in_human_readable_format(self):
         pass
