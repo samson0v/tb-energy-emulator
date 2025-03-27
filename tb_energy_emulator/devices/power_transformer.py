@@ -125,17 +125,14 @@ class PowerTransformer(BaseDevice):
     async def __update_consumptions(self):
         hours = self._clock.hours
         if hours in DAILY_RATE_HOURS:
-            if self.__last_updated_day_consumption_time < hours:
+            if self.__last_updated_day_consumption_time != hours:
                 await self.__update_consumption(self.day_consumption)
                 self.__last_updated_day_consumption_time = hours
         else:
-            if self.__last_updated_night_consumption_time < hours:
+            if self.__last_updated_night_consumption_time != hours:
                 await self.__update_consumption(self.night_consumption)
                 self.__last_updated_night_consumption_time = hours
 
     async def __update_consumption(self, consumption):
-        consumption.value += self.output_voltage_l1.get_value_without_multiplier()
-        consumption.value += self.output_voltage_l2.get_value_without_multiplier()
-        consumption.value += self.output_voltage_l3.get_value_without_multiplier()
-
+        consumption.value += self.power.value
         await self._storage.set_value(value=int(consumption.value), **consumption.config)

@@ -62,8 +62,7 @@ MINIMUM_CONSUMPTION = 10_000
 # Power Transformer Constants
 
 MAX_OUTPUT_POWER = 49_000
-DAILY_RATE_HOURS = (6, 23)
-NIGHT_RATE_HOURS = (23, 6)
+DAILY_RATE_HOURS = tuple(range(6, 24))
 
 # Battery Constants
 

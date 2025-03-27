@@ -12,7 +12,8 @@ class Consumption(BaseDevice):
         super().__init__(config, storage_type, clock)
 
         self.__needed_power = MINIMUM_CONSUMPTION
-        self.__last_updated_consumption_time = 0
+        self.__last_updated_consumption_time = 30
+        self.__next_consumption = None
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -121,13 +122,21 @@ class Consumption(BaseDevice):
         hour = self._clock.hours
 
         if self.__last_updated_consumption_time != hour:
-            for (r, consumption) in CONSUPTION_BY_TIME.items():
+            for (index, r) in enumerate(CONSUPTION_BY_TIME):
                 if hour in r:
-                    self.__needed_power = consumption
+                    self.__needed_power = CONSUPTION_BY_TIME[r]
+                    next_index = index + 1 if index + 1 < len(CONSUPTION_BY_TIME) else 0
+                    next_consumption_key = tuple(CONSUPTION_BY_TIME.keys())[next_index]
+                    self.__next_consumption = CONSUPTION_BY_TIME[next_consumption_key]
                     self.__last_updated_consumption_time = hour
                     break
         else:
-            min_value = self.__needed_power - 50
-            max_value = self.__needed_power + 50
-            new_number = self.__needed_power + random.randint(-2, 2)
+            min_value, max_value = self.__get_min_and_max_values()
+            new_number = self.__needed_power + random.randint(-100, 100)
             self.__needed_power = max(min_value, min(max_value, new_number))
+
+    def __get_min_and_max_values(self):
+        if self.__next_consumption > self.__needed_power:
+            return self.__needed_power, self.__next_consumption
+
+        return self.__next_consumption, self.__needed_power
