@@ -157,6 +157,8 @@ class Inverter(BaseDevice):
             if batteries.running.value:
                 needed_power = consumption.needed_consumption - total_output_power
                 total_output_power += await batteries.discharge(needed_power)
+            else:
+                await batteries.reset_discharge_current()
 
         if total_output_power < consumption.needed_consumption:
             if generator.running.value:
@@ -178,6 +180,8 @@ class Inverter(BaseDevice):
                                   generator,
                                   batteries,
                                   consumption):
+        await batteries.reset_discharge_current()
+
         needed_power = consumption.needed_consumption + 2000 if batteries.level.value < 100 else consumption.needed_consumption
         total_power_output = await self.get_power_from_all_sources(solar_batteries,
                                                                    wind_turbine,
@@ -190,6 +194,8 @@ class Inverter(BaseDevice):
             total_power_output -= batteries_input
             await batteries.update(batteries_input)
             await self.update_charger_mode(batteries.charge_current.value)
+        else:
+            await batteries.reset_charge_current()
 
         if total_power_output >= consumption.needed_consumption:
             self.power.value = consumption.needed_consumption
@@ -208,6 +214,7 @@ class Inverter(BaseDevice):
             await self.update_charger_mode(batteries.charge_current.value)
             self.power.value = consumption.needed_consumption
         else:
+            await batteries.reset_charge_current()
             needed_power = consumption.needed_consumption - total_power_output
 
             if self.__only_charge_batteries and batteries.level.value >= 80:
@@ -219,12 +226,15 @@ class Inverter(BaseDevice):
                 await power_transformer.update(0)
                 await generator.update(0)
             else:
+                await batteries.reset_discharge_current()
                 self.__only_charge_batteries = True if batteries.running.value else False
                 needed_power = needed_power + 2000 if batteries.level.value < 100 and batteries.running.value else needed_power
                 await power_transformer.update(needed_power)
                 total_power_output += power_transformer.power.value
 
                 if total_power_output < consumption.needed_consumption:
+                    await batteries.reset_charge_current()
+
                     if generator.running.value:
                         await generator.update(consumption.needed_consumption - total_power_output)
                         total_power_output = consumption.needed_consumption

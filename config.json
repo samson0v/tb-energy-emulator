@@ -821,9 +821,9 @@
                 },
                 {
                     "name": "voltage",
-                    "initValue": 46.0,
+                    "initValue": 53.0,
                     "minValue": 44.5,
-                    "maxValue": 53.3,
+                    "maxValue": 53.0,
                     "multiplier": 10,
                     "modbus": {
                         "address": 10,
