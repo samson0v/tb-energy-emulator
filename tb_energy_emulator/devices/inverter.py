@@ -113,7 +113,7 @@ class Inverter(BaseDevice):
                                            consumption)
         elif self.mode.value == Mode.ON.value:
             await self.__on_green_energy(solar_batteries, wind_turbine)
-            await self.__on_mode(solar_batteries, wind_turbine, batteries, power_transformer, consumption)
+            await self.__on_mode(solar_batteries, wind_turbine, batteries, power_transformer, generator, consumption)
         elif self.mode.value == Mode.OFF.value:
             await self.__off_green_evergy(solar_batteries, wind_turbine)
             await self.__off_mode(generator, power_transformer, consumption)
@@ -196,7 +196,7 @@ class Inverter(BaseDevice):
         else:
             self.power.value = total_power_output
 
-    async def __on_mode(self, solar_batteries, wind_turbine, batteries, power_transformer, consumption):
+    async def __on_mode(self, solar_batteries, wind_turbine, batteries, power_transformer, generator, consumption):
         total_power_output = 0
 
         total_power_output += solar_batteries.output_power.value
@@ -217,6 +217,7 @@ class Inverter(BaseDevice):
                 total_power_output += await batteries.discharge(needed_power)
                 self.power.value = consumption.needed_consumption
                 await power_transformer.update(0)
+                await generator.update(0)
             else:
                 self.__only_charge_batteries = True if batteries.running.value else False
                 needed_power = needed_power + 2000 if batteries.level.value < 100 and batteries.running.value else needed_power
@@ -224,9 +225,16 @@ class Inverter(BaseDevice):
                 total_power_output += power_transformer.power.value
 
                 if total_power_output < consumption.needed_consumption:
-                    self.power.value = total_power_output
+                    if generator.running.value:
+                        await generator.update(consumption.needed_consumption - total_power_output)
+                        total_power_output = consumption.needed_consumption
+                        self.power.value = total_power_output
+                    else:
+                        await generator.update(0)
+                        self.power.value = total_power_output
                 else:
                     self.power.value = consumption.needed_consumption
+                    await generator.update(0)
 
                     batteries_input = total_power_output - consumption.needed_consumption
                     await batteries.update(batteries_input)

@@ -120,7 +120,7 @@ class PowerTransformer(BaseDevice):
     def __get_max_power_output(self):
         running_phases_num = tuple(filter(lambda x: x.value == PhaseMode.ON.value or x.value == PhaseMode.BYPASS.value,
                                           [self.l1_mode, self.l2_mode, self.l3_mode]))
-        return self.__max_output_power / len(running_phases_num)
+        return (len(running_phases_num) * self.__max_output_power) / 3
 
     async def __update_consumptions(self):
         hours = self._clock.hours
