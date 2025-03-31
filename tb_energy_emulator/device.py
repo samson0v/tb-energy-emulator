@@ -137,7 +137,8 @@ class Devices:
 
     async def on(self):
         for device in self.__devices.values():
-            await device.on()
+            if device.name != 'Generator':
+                await device.on()
 
     async def off(self):
         for device in self.__devices.values():

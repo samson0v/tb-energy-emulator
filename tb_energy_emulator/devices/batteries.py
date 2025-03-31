@@ -26,7 +26,7 @@ class Batteries(BaseDevice):
         self.__capacity_Wh = MAX_CAPACITY_WH
         self.__charging_duration_in_hours = CHARGING_DURATION_IN_HOURS
         self.__one_battery_capacity_Wh = self.__capacity_Wh / len(self.get_all_bateries())
-        self.__voltage_coefficient = (MAX_VOLTAGE - MIN_VOLTAGE) / MAX_CAPACITY_WH
+        self.__voltage_coefficient = round((MAX_VOLTAGE - MIN_VOLTAGE) / 100, 3)
         self.__total_discharge_Wh = 0
 
     def __str__(self):
@@ -113,7 +113,7 @@ class Batteries(BaseDevice):
         return output_power
 
     async def __update_voltage(self):
-        current_voltage = (self.__voltage_coefficient * self.__capacity_Wh) + MIN_VOLTAGE
+        current_voltage = (self.__voltage_coefficient * self.level.value) + MIN_VOLTAGE
         self.voltage.value = current_voltage
         await self._storage.set_value(value=self.voltage.value, **self.voltage.config)
 

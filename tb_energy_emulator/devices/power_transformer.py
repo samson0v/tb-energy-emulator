@@ -15,8 +15,8 @@ class PowerTransformer(BaseDevice):
         super().__init__(config, storage_type, clock)
 
         self.__max_output_power = MAX_OUTPUT_POWER
-        self.__last_updated_day_consumption_time = 0
-        self.__last_updated_night_consumption_time = 0
+        self.__last_updated_day_consumption_time = None
+        self.__last_updated_night_consumption_time = None
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -124,15 +124,17 @@ class PowerTransformer(BaseDevice):
 
     async def __update_consumptions(self):
         hours = self._clock.hours
+        minutes = self._clock.minutes
+
         if hours in DAILY_RATE_HOURS:
-            if self.__last_updated_day_consumption_time != hours:
+            if self.__last_updated_day_consumption_time != minutes:
                 await self.__update_consumption(self.day_consumption)
-                self.__last_updated_day_consumption_time = hours
+                self.__last_updated_day_consumption_time = minutes
         else:
-            if self.__last_updated_night_consumption_time != hours:
+            if self.__last_updated_night_consumption_time != minutes:
                 await self.__update_consumption(self.night_consumption)
-                self.__last_updated_night_consumption_time = hours
+                self.__last_updated_night_consumption_time = minutes
 
     async def __update_consumption(self, consumption):
-        consumption.value += self.power.value
-        await self._storage.set_value(value=int(consumption.value), **consumption.config)
+        consumption.value += self.power.value / 60
+        await self._storage.set_value(value=int(consumption.value / 10), **consumption.config)

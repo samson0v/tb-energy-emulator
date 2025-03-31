@@ -137,7 +137,7 @@ class Consumption(BaseDevice):
                     break
         else:
             min_value, max_value = self.__get_min_and_max_values()
-            new_number = self.__needed_power + random.randint(-100, 100)
+            new_number = self.__needed_power + random.randint(-1000, 1000)
             self.__needed_power = max(min_value, min(max_value, new_number))
 
     def __get_min_and_max_values(self):
