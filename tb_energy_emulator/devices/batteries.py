@@ -27,6 +27,7 @@ class Batteries(BaseDevice):
         self.__charging_duration_in_hours = CHARGING_DURATION_IN_HOURS
         self.__one_battery_capacity_Wh = self.__capacity_Wh / len(self.get_all_bateries())
         self.__voltage_coefficient = (MAX_VOLTAGE - MIN_VOLTAGE) / MAX_CAPACITY_WH
+        self.__total_discharge_Wh = 0
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -77,9 +78,8 @@ class Batteries(BaseDevice):
             self.__decrease_temperature()
 
     async def __update_cycle_count(self):
-        if self.level.value == 0:
-            self.cycle_count.value += 1
-            await self._storage.set_value(value=self.cycle_count.value, **self.cycle_count.config)
+        self.cycle_count.value = int(self.__total_discharge_Wh / self.__max_capacity_Wh)
+        await self._storage.set_value(value=self.cycle_count.value, **self.cycle_count.config)
 
     async def charge(self, input_power):
         self.__reset_charging_duration()
@@ -140,6 +140,7 @@ class Batteries(BaseDevice):
 
             self.__capacity_Wh = new_energy_Wh
             self.level.value = (new_energy_Wh / self.__max_capacity_Wh) * 100
+            self.__total_discharge_Wh += input_power
 
         return output_power
 
