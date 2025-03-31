@@ -22,7 +22,6 @@ class Batteries(BaseDevice):
     def __init__(self, config, storage_type, clock):
         super().__init__(config, storage_type, clock)
 
-        self.__charging = False
         self.__max_capacity_Wh = MAX_CAPACITY_WH
         self.__capacity_Wh = MAX_CAPACITY_WH
         self.__charging_duration_in_hours = CHARGING_DURATION_IN_HOURS
@@ -84,11 +83,6 @@ class Batteries(BaseDevice):
 
     async def charge(self, input_power):
         self.__reset_charging_duration()
-
-        if input_power > 0:
-            self.__charging = True
-        else:
-            self.__charging = False
 
         input_power = input_power / self._clock.ticks_num_in_hour
 

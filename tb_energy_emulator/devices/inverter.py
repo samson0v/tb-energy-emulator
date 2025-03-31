@@ -36,52 +36,12 @@ class Inverter(BaseDevice):
             f'output power: ({self.power_l1}, {self.power_l2}, {self.power_l3})' \
             f'\n\tcharger mode: {self.charger_mode}'
 
-    async def off(self):
-        await super().off()
-
-        self.current.value = 0
-        self.current_l1.value = 0
-        self.current_l2.value = 0
-        self.current_l3.value = 0
-
-        self.power.value = 0
-        self.power_l1.value = 0
-        self.power_l2.value = 0
-        self.power_l3.value = 0
-
-        self.output_voltage_l1.value = 0
-        self.output_voltage_l2.value = 0
-        self.output_voltage_l3.value = 0
-
-        self.input_voltage_l1.value = 0
-        self.input_voltage_l2.value = 0
-        self.input_voltage_l3.value = 0
-
-        await self._storage.set_value(value=self.current.value, **self.current.config)
-        await self._storage.set_value(value=self.current_l1.value, **self.current_l1.config)
-        await self._storage.set_value(value=self.current_l2.value, **self.current_l2.config)
-        await self._storage.set_value(value=self.current_l3.value, **self.current_l3.config)
-
-        await self._storage.set_value(value=self.power.value, **self.power.config)
-        await self._storage.set_value(value=self.power_l1.value, **self.power_l1.config)
-        await self._storage.set_value(value=self.power_l2.value, **self.power_l2.config)
-        await self._storage.set_value(value=self.power_l3.value, **self.power_l3.config)
-
-        await self._storage.set_value(value=self.output_voltage_l1.value, **self.output_voltage_l1.config)
-        await self._storage.set_value(value=self.output_voltage_l2.value, **self.output_voltage_l2.config)
-        await self._storage.set_value(value=self.output_voltage_l3.value, **self.output_voltage_l3.config)
-
-        await self._storage.set_value(value=self.input_voltage_l1.value, **self.input_voltage_l1.config)
-        await self._storage.set_value(value=self.input_voltage_l2.value, **self.input_voltage_l2.config)
-        await self._storage.set_value(value=self.input_voltage_l3.value, **self.input_voltage_l3.config)
-
     async def update(self, solar_batteries, wind_turbine, power_transformer, generator, batteries, consumption):
         await super().update()
         await self.__check_and_update_mode()
 
         await self.__update_input_voltage()
         await self.__update_output_voltage()
-        await self.__update_temperatures()
 
         await self.get_output(solar_batteries,
                               wind_turbine,
@@ -91,6 +51,7 @@ class Inverter(BaseDevice):
                               consumption)
         await self.__update_output_power()
         await self.__update_output_current()
+        await self.__update_temperatures()
 
     async def get_output(self, solar_batteries, wind_turbine, power_transformer, generator, batteries, consumption):
         self.power.value = 0  # NOTE: consumption output
@@ -173,6 +134,14 @@ class Inverter(BaseDevice):
         else:
             self.power.value = total_output_power
 
+    def __is_batteries_power_needed(self, batteries):
+        max_batteries_level = 100
+
+        if batteries.batteries_mode.value == 0:
+            max_batteries_level = 80
+
+        return batteries.running.value and batteries.level.value < max_batteries_level
+
     async def __charger_only_mode(self,
                                   solar_batteries,
                                   wind_turbine,
@@ -182,14 +151,14 @@ class Inverter(BaseDevice):
                                   consumption):
         await batteries.reset_discharge_current()
 
-        needed_power = consumption.needed_consumption + 2000 if batteries.level.value < 100 else consumption.needed_consumption
+        needed_power = consumption.needed_consumption + 2000 if self.__is_batteries_power_needed(batteries) else consumption.needed_consumption
         total_power_output = await self.get_power_from_all_sources(solar_batteries,
                                                                    wind_turbine,
                                                                    power_transformer,
                                                                    generator,
                                                                    needed_power)
 
-        if batteries.level.value < 100:
+        if self.__is_batteries_power_needed(batteries):
             batteries_input = total_power_output - consumption.needed_consumption if total_power_output > consumption.needed_consumption else 0
             total_power_output -= batteries_input
             await batteries.update(batteries_input)
@@ -228,7 +197,7 @@ class Inverter(BaseDevice):
             else:
                 await batteries.reset_discharge_current()
                 self.__only_charge_batteries = True if batteries.running.value else False
-                needed_power = needed_power + 2000 if batteries.level.value < 100 and batteries.running.value else needed_power
+                needed_power = needed_power + 2000 if self.__is_batteries_power_needed(batteries) else needed_power
                 await power_transformer.update(needed_power)
                 total_power_output += power_transformer.power.value
 
@@ -302,36 +271,41 @@ class Inverter(BaseDevice):
             self.mode.value = mode
             await self._storage.set_value(value=self.mode.value, **self.mode.config)
 
-            await self.__update_running()
-
-    async def __update_running(self):
-        if self.mode.value == Mode.ON.value:
-            await self.on()
-        elif self.mode.value == Mode.OFF.value:
-            await self.off()
-
     async def __update_input_voltage(self):
-        self.input_voltage_l1.generate_value()
-        self.input_voltage_l2.generate_value()
-        self.input_voltage_l3.generate_value()
+        if self.power.value > 0:
+            self.input_voltage_l1.generate_value()
+            self.input_voltage_l2.generate_value()
+            self.input_voltage_l3.generate_value()
+        else:
+            self.input_voltage_l1.value = 0
+            self.input_voltage_l2.value = 0
+            self.input_voltage_l3.value = 0
 
         await self._storage.set_value(value=self.input_voltage_l1.value, **self.input_voltage_l1.config)
         await self._storage.set_value(value=self.input_voltage_l2.value, **self.input_voltage_l2.config)
         await self._storage.set_value(value=self.input_voltage_l3.value, **self.input_voltage_l3.config)
 
     async def __update_output_voltage(self):
-        self.output_voltage_l1.generate_value()
-        self.output_voltage_l2.generate_value()
-        self.output_voltage_l3.generate_value()
+        if self.power.value > 0:
+            self.output_voltage_l1.generate_value()
+            self.output_voltage_l2.generate_value()
+            self.output_voltage_l3.generate_value()
+        else:
+            self.output_voltage_l1.value = 0
+            self.output_voltage_l2.value = 0
+            self.output_voltage_l3.value = 0
 
         await self._storage.set_value(value=self.output_voltage_l1.value, **self.output_voltage_l1.config)
         await self._storage.set_value(value=self.output_voltage_l2.value, **self.output_voltage_l2.config)
         await self._storage.set_value(value=self.output_voltage_l3.value, **self.output_voltage_l3.config)
 
     async def __update_temperatures(self):
-        self.__update_temperature(self.temperature_l1)
-        self.__update_temperature(self.temperature_l2)
-        self.__update_temperature(self.temperature_l3)
+        if self.power.value > 0:
+            self.__update_temperature(self.temperature_l1)
+            self.__update_temperature(self.temperature_l2)
+            self.__update_temperature(self.temperature_l3)
+        else:
+            await self.__decrease_temperatures()
 
         await self._storage.set_value(value=int(self.temperature_l1.value), **self.temperature_l1.config)
         await self._storage.set_value(value=int(self.temperature_l2.value), **self.temperature_l2.config)
@@ -347,10 +321,6 @@ class Inverter(BaseDevice):
         self.decrease_temperature(self.temperature_l1)
         self.decrease_temperature(self.temperature_l2)
         self.decrease_temperature(self.temperature_l3)
-
-        await self._storage.set_value(value=self.temperature_l1.value, **self.temperature_l1.config)
-        await self._storage.set_value(value=self.temperature_l2.value, **self.temperature_l2.config)
-        await self._storage.set_value(value=self.temperature_l3.value, **self.temperature_l3.config)
 
     def decrease_temperature(self, temperature):
         if temperature.value > temperature.min_value:
@@ -384,6 +354,9 @@ class Inverter(BaseDevice):
         await self._storage.set_value(value=int(self.current_l3.value), **self.current_l3.config)
 
     def __calculate_current(self, power, voltage):
+        if voltage == 0:
+            return 0
+
         return power / voltage
 
     async def __update_output_power(self):

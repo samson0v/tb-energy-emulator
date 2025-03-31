@@ -13,7 +13,9 @@ class Consumption(BaseDevice):
 
         self.__needed_power = MINIMUM_CONSUMPTION
         self.__last_updated_consumption_time = 30
-        self.__next_consumption = None
+
+        self.__min_consumtion = None  # NOTE: Min consumption for the current period
+        self.__next_consumption = None  # NOTE: Max consumption for the next period
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -125,9 +127,12 @@ class Consumption(BaseDevice):
             for (index, r) in enumerate(CONSUPTION_BY_TIME):
                 if hour in r:
                     self.__needed_power = CONSUPTION_BY_TIME[r]
+
                     next_index = index + 1 if index + 1 < len(CONSUPTION_BY_TIME) else 0
                     next_consumption_key = tuple(CONSUPTION_BY_TIME.keys())[next_index]
                     self.__next_consumption = CONSUPTION_BY_TIME[next_consumption_key]
+                    self.__min_consumtion = CONSUPTION_BY_TIME[r]
+
                     self.__last_updated_consumption_time = hour
                     break
         else:
@@ -136,7 +141,7 @@ class Consumption(BaseDevice):
             self.__needed_power = max(min_value, min(max_value, new_number))
 
     def __get_min_and_max_values(self):
-        if self.__next_consumption > self.__needed_power:
-            return self.__needed_power, self.__next_consumption
+        if self.__next_consumption > self.__min_consumtion:
+            return self.__min_consumtion, self.__next_consumption
 
-        return self.__next_consumption, self.__needed_power
+        return self.__next_consumption, self.__min_consumtion
