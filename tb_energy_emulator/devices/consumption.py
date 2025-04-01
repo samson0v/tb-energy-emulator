@@ -65,6 +65,7 @@ class Consumption(BaseDevice):
             await self.__update_frequency()
             await self.__update_voltage()
             await self.__update_consumption(input_power)
+            await self.__update_required_consumption()
 
     async def __update_frequency(self):
         self.frequency_l1.generate_value()
@@ -145,3 +146,7 @@ class Consumption(BaseDevice):
             return self.__min_consumtion, self.__next_consumption
 
         return self.__next_consumption, self.__min_consumtion
+
+    async def __update_required_consumption(self):
+        self.required_consumption.value = self.__needed_power
+        await self._storage.set_value(value=self.required_consumption.value, **self.required_consumption.config)

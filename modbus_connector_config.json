@@ -105,6 +105,13 @@
             "functionCode": 3,
             "objectsCount": 1,
             "address": 10
+          },
+          {
+            "tag": "requiredConsumption",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 11
           }
         ]
       },

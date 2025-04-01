@@ -172,6 +172,18 @@
                         "node_id": "ns=1; s=Consumption",
                         "name": "Consumption"
                     }
+                },
+                {
+                    "name": "required_consumption",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 11,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=RequiredConsumption",
+                        "name": "RequiredConsumption"
+                    }
                 }
             ]
         },
