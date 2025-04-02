@@ -1,6 +1,6 @@
 from enum import Enum
 
-from tb_energy_emulator.constants import DAILY_RATE_HOURS, MAX_OUTPUT_POWER
+from tb_energy_emulator.constants import CONSUMPTION_RESET_PERIOD, DAILY_RATE_HOURS, MAX_OUTPUT_POWER
 from tb_energy_emulator.device import BaseDevice
 
 
@@ -17,6 +17,7 @@ class PowerTransformer(BaseDevice):
         self.__max_output_power = MAX_OUTPUT_POWER
         self.__last_updated_day_consumption_time = None
         self.__last_updated_night_consumption_time = None
+        self.__last_consumption_reset_time = 0
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
@@ -130,11 +131,24 @@ class PowerTransformer(BaseDevice):
             if self.__last_updated_day_consumption_time != minutes:
                 await self.__update_consumption(self.day_consumption)
                 self.__last_updated_day_consumption_time = minutes
+                await self.__check_and_reset_consumtption()
         else:
             if self.__last_updated_night_consumption_time != minutes:
                 await self.__update_consumption(self.night_consumption)
                 self.__last_updated_night_consumption_time = minutes
+                await self.__check_and_reset_consumtption()
 
     async def __update_consumption(self, consumption):
         consumption.value += self.power.value / 60
         await self._storage.set_value(value=int(consumption.value / 10), **consumption.config)
+
+    async def __check_and_reset_consumtption(self):
+        if self.__last_consumption_reset_time >= CONSUMPTION_RESET_PERIOD:
+            self.day_consumption.value = 0
+            self.night_consumption.value = 0
+            self.__last_consumption_reset_time = 0
+
+            await self._storage.set_value(value=self.day_consumption.value, **self.day_consumption.config)
+            await self._storage.set_value(value=self.night_consumption.value, **self.night_consumption.config)
+        else:
+            self.__last_consumption_reset_time += 1
