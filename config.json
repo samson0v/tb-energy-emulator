@@ -833,9 +833,9 @@
                 },
                 {
                     "name": "voltage",
-                    "initValue": 53.0,
-                    "minValue": 44.5,
-                    "maxValue": 53.0,
+                    "initValue": 110.4,
+                    "minValue": 89.6,
+                    "maxValue": 110.4,
                     "multiplier": 10,
                     "modbus": {
                         "address": 10,
@@ -848,9 +848,7 @@
                 },
                 {
                     "name": "charge_current",
-                    "initValue": 79,
-                    "minValue": 0,
-                    "maxValue": 99,
+                    "initValue": 0,
                     "modbus": {
                         "address": 11,
                         "function_code": 6
@@ -874,9 +872,7 @@
                 },
                 {
                     "name": "discharge_current",
-                    "initValue": 79,
-                    "minValue": 0,
-                    "maxValue": 99,
+                    "initValue": 0,
                     "modbus": {
                         "address": 13,
                         "function_code": 6

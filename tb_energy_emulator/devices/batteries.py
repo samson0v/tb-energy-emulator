@@ -25,7 +25,7 @@ class Batteries(BaseDevice):
         self.__max_capacity_Wh = MAX_CAPACITY_WH
         self.__capacity_Wh = MAX_CAPACITY_WH
         self.__charging_duration_in_hours = CHARGING_DURATION_IN_HOURS
-        self.__one_battery_capacity_Wh = self.__capacity_Wh / len(self.get_all_bateries())
+        self.__one_battery_capacity_Wh = self.__capacity_Wh / 6
         self.__voltage_coefficient = round((MAX_VOLTAGE - MIN_VOLTAGE) / 100, 3)
         self.__total_discharge_Wh = 0
 
@@ -40,7 +40,7 @@ class Batteries(BaseDevice):
             f'\n\ttemperature: {self.temperature} °C, cycle count: {self.cycle_count}'
 
     def get_all_bateries(self):
-        return [self.running, self.running_1, self.running_2, self.running_3, self.running_4, self.running_5]
+        return [self.running_1, self.running_2, self.running_3, self.running_4, self.running_5]
 
     async def off(self):
         await super().off()
@@ -125,11 +125,7 @@ class Batteries(BaseDevice):
 
             input_power = input_power / self._clock.ticks_num_in_hour
 
-            self.discharge_current.value = (output_power * self.discharge_current.max_value) / 25000
-
-            if self.discharge_current.value > self.discharge_current.max_value:
-                input_power = self.discharge_current.max_value * self.voltage.get_value_without_multiplier()
-                self.discharge_current.value = self.discharge_current.max_value
+            self.discharge_current.value = output_power / self.voltage.get_value_without_multiplier()
 
             current_energy_Wh = (self.level.value / 100) * self.__max_capacity_Wh
             new_energy_Wh = current_energy_Wh - input_power
@@ -203,9 +199,9 @@ class Batteries(BaseDevice):
 
     async def __update_batteries_perfomance(self, is_battery_plugged):
         if not is_battery_plugged:
-            self.__max_capacity_Wh -= self.__one_battery_capacity_Wh
+            self.__capacity_Wh -= self.__one_battery_capacity_Wh
         else:
-            self.__max_capacity_Wh += self.__one_battery_capacity_Wh
+            self.__capacity_Wh += self.__one_battery_capacity_Wh
 
     async def __check_and_update_batteries_mode(self):
         batteries_mode = await self._storage.get_value(**self.batteries_mode.config)

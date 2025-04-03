@@ -21,21 +21,21 @@ SOLAR_BATTERIES_I_SC_REF = 9
 # Wind Turbine Constants
 
 WIND_SPEED_BY_TIME = {
-    tuple(range(0, 2)): (15, 17),
-    tuple(range(2, 4)): (17, 20),
-    tuple(range(4, 6)): (21, 25),
+    tuple(range(0, 2)): (8, 9),
+    tuple(range(2, 4)): (10, 11),
+    tuple(range(4, 6)): (9, 10),
     tuple(range(6, 8)): (3, 4),
     tuple(range(8, 10)): (4, 5),
     tuple(range(10, 12)): (1, 2),
     tuple(range(12, 14)): (2, 3),
-    tuple(range(14, 16)): (3, 5),
-    tuple(range(16, 18)): (5, 7),
-    tuple(range(18, 20)): (7, 9),
-    tuple(range(20, 22)): (9, 11),
-    tuple(range(22, 24)): (12, 15)
+    tuple(range(14, 16)): (5, 6),
+    tuple(range(16, 18)): (6, 7),
+    tuple(range(18, 20)): (8, 9),
+    tuple(range(20, 22)): (7, 8),
+    tuple(range(22, 24)): (6, 7)
 }
 
-ROTOR_RADIUS = 1.0
+ROTOR_RADIUS = 1.7
 TIP_SPEED_RATIO = 7
 
 # Generator Constants
@@ -71,5 +71,5 @@ MAX_CAPACITY_WH = 100_000
 CHARGING_DURATION_IN_HOURS = 4
 MAX_CHARGING_LEVEL_WITH_BATTERY_LIFE = 80
 CHARGIN_DURATION_AFTER_80_PERCENT = 10
-MAX_VOLTAGE = 53.4
-MIN_VOLTAGE = 44.6
+MAX_VOLTAGE = 110.4
+MIN_VOLTAGE = 89.6

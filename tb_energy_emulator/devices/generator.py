@@ -1,3 +1,4 @@
+import random
 from tb_energy_emulator.device import BaseDevice
 
 from tb_energy_emulator.constants import (
@@ -55,7 +56,7 @@ class Generator(BaseDevice):
         await self.update_running_status()
 
         if self.running.value:
-            await self.__update_oil_temperature()
+            await self.__update_oil_temperature(consuption)
             await self.__update_voltage()
             await self.__update_output_power(consuption)
             await self.__update_frequency()
@@ -77,11 +78,30 @@ class Generator(BaseDevice):
             else:
                 await self.off()
 
-    async def __update_oil_temperature(self):
-        if self.oil_temperature.value <= self.oil_temperature.max_value:
-            self.oil_temperature.value = self.oil_temperature.value + 1
+    async def __update_oil_temperature(self, consumption):
+        '''
+        Three cases are available:
+        - generator warming up
+        - generator under load
+        - generator without load
+        '''
+
+        if self.oil_temperature.value <= 85:
+            self.oil_temperature.value += 1
+        else:
+            if consumption == 0:
+                self.oil_temperature.value = self.generate_temperature(self.oil_temperature.value, 86, 95)
+            else:
+                if self.oil_temperature.value <= 96:
+                    self.oil_temperature.value += 1
+                else:
+                    self.oil_temperature.value = self.generate_temperature(self.oil_temperature.value, 97, 105)
 
         await self._storage.set_value(value=self.oil_temperature.value, **self.oil_temperature.config)
+
+    def generate_temperature(self, current_temperature, min_value, max_value):
+        new_number = current_temperature + random.randint(-1, 1)
+        return max(min_value, min(max_value, new_number))
 
     async def __update_voltage(self):
         self.voltage.generate_value()
