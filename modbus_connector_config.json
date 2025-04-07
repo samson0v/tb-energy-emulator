@@ -28,7 +28,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -81,7 +81,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 40000
             }
           },
           {
@@ -93,7 +93,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 40000
             }
           },
           {
@@ -105,7 +105,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 40000
             }
           }
           ,
@@ -192,7 +192,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -208,7 +208,7 @@
             "address": 1,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 30000
             }
           },
           {
@@ -220,7 +220,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 40000
             }
           },
           {
@@ -243,7 +243,7 @@
             "address": 4,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 4000
+              "reportPeriod": 120000
             }
           },
           {
@@ -294,7 +294,7 @@
         "rpc": [
           {
             "tag": "setRunning",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 1
@@ -327,7 +327,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -366,7 +366,7 @@
             "address": 3,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 300000
             }
           },
           {
@@ -395,7 +395,7 @@
         "rpc": [
           {
             "tag": "setRunning",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 1
@@ -428,7 +428,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -444,7 +444,7 @@
             "address": 1,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 4000
+              "reportPeriod": 15000
             }
           },
           {
@@ -455,7 +455,7 @@
             "address": 2,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 4000
+              "reportPeriod": 15000
             }
           },
           {
@@ -466,7 +466,7 @@
             "address": 3,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 4000
+              "reportPeriod": 15000
             }
           },
           {
@@ -478,14 +478,14 @@
             "divider": 100,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 60000
             }
           }
         ],
         "rpc": [
           {
             "tag": "setRunning",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 1
@@ -549,7 +549,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -566,7 +566,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 40000
             }
           },
           {
@@ -671,7 +671,8 @@
             "address": 13,
             "multiplier": 10,
             "reportStrategy": {
-              "type": "ON_CHANGE"
+              "type": "ON_REPORT_PERIOD",
+              "reportPeriod": 600000
             }
           },
           {
@@ -682,14 +683,15 @@
             "address": 14,
             "multiplier": 10,
             "reportStrategy": {
-              "type": "ON_CHANGE"
+              "type": "ON_REPORT_PERIOD",
+              "reportPeriod": 600000
             }
           }
         ],
         "rpc": [
           {
             "tag": "setRunning",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 1
@@ -756,7 +758,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -766,7 +768,7 @@
           },
           {
             "tag": "running1",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 2,
@@ -776,7 +778,7 @@
           },
           {
             "tag": "running2",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 3,
@@ -786,7 +788,7 @@
           },
           {
             "tag": "running3",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 4,
@@ -796,7 +798,7 @@
           },
           {
             "tag": "running4",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 5,
@@ -806,7 +808,7 @@
           },
           {
             "tag": "running5",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 6,
@@ -822,7 +824,7 @@
             "address": 8,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 4000
+              "reportPeriod": 60000
             }
           },
           {
@@ -833,7 +835,7 @@
             "address": 9,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 300000
             }
           },
           {
@@ -884,42 +886,42 @@
         "rpc": [
           {
             "tag": "setRunning",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 1
           },
           {
             "tag": "setRunning1",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 2
           },
           {
             "tag": "setRunning2",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 3
           },
           {
             "tag": "setRunning3",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 4
           },
           {
             "tag": "setRunning4",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 5
           },
           {
             "tag": "setRunning5",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 5,
             "objectsCount": 1,
             "address": 6
@@ -972,7 +974,7 @@
         "timeseries": [
           {
             "tag": "running",
-            "type": "bit",
+            "type": "bits",
             "functionCode": 1,
             "objectsCount": 1,
             "address": 1,
@@ -1060,7 +1062,7 @@
             "address": 8,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 60000
             }
           },
           {
@@ -1071,7 +1073,7 @@
             "address": 9,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 60000
             }
           },
           {
@@ -1082,7 +1084,7 @@
             "address": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 5000
+              "reportPeriod": 60000
             }
           },
           {
