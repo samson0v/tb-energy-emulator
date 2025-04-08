@@ -156,7 +156,7 @@ class Batteries(BaseDevice):
 
     def __charge_with_optimized_without_battery_life_mode(self, input_power):
         if self.level.value < 100 and input_power > 0:
-            self.__calculate_charge_current(input_power)
+            self.__calculate_charge_current()
 
             if self.level.value > 80:
                 self.__charging_duration_in_hours = CHARGIN_DURATION_AFTER_80_PERCENT
