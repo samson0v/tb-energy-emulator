@@ -17,12 +17,15 @@ class Consumption(BaseDevice):
         self.__min_consumtion = None  # NOTE: Min consumption for the current period
         self.__next_consumption = None  # NOTE: Max consumption for the next period
 
+        self.__last_updated_daily_consumption_time = None
+
     def __str__(self):
         return f'\n{self.name} (running: {self.running}): ' \
             f'\n\ttotal consumtion: {self.consumption} W' \
             f'\n\tfrequency (Hz): ({self.frequency_l1}, {self.frequency_l2}, {self.frequency_l3}), ' \
             f'\n\tvoltage (V): ({self.voltage_l1}, {self.voltage_l2}, {self.voltage_l3})' \
-            f'\n\tconsumption (W): ({self.consumption_l1}, {self.consumption_l2}, {self.consumption_l3})'
+            f'\n\tconsumption (W): ({self.consumption_l1}, {self.consumption_l2}, {self.consumption_l3})' \
+            f'\n\tdaily consumption (Wh): {self.daily_consumption}'
 
     async def off(self):
         await super().off()
@@ -66,6 +69,7 @@ class Consumption(BaseDevice):
             await self.__update_voltage()
             await self.__update_consumption(input_power)
             await self.__update_required_consumption()
+            await self.__update_daily_consumption()
 
     async def __update_frequency(self):
         self.frequency_l1.generate_value()
@@ -150,3 +154,15 @@ class Consumption(BaseDevice):
     async def __update_required_consumption(self):
         self.required_consumption.value = self.__needed_power
         await self._storage.set_value(value=self.required_consumption.value, **self.required_consumption.config)
+
+    async def __update_daily_consumption(self):
+        if self._clock.hours == 0 and self._clock.minutes == 0:
+            self.daily_consumption.value = 0
+            await self._storage.set_value(value=self.daily_consumption.value, **self.daily_consumption.config)
+
+        if self.__last_updated_daily_consumption_time != self._clock.minutes:
+            self.daily_consumption.value += int(self.consumption.value / 60)
+            await self._storage.set_value(value=int(self.daily_consumption.value / 100),
+                                          **self.daily_consumption.config)
+
+            self.__last_updated_daily_consumption_time = self._clock.minutes

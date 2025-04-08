@@ -184,6 +184,18 @@
                         "node_id": "ns=1; s=RequiredConsumption",
                         "name": "RequiredConsumption"
                     }
+                },
+                {
+                    "name": "daily_consumption",
+                    "initValue": 0,
+                    "modbus": {
+                        "address": 12,
+                        "function_code": 6
+                    },
+                    "opcua": {
+                        "node_id": "ns=1; s=DailyConsumption",
+                        "name": "DailyConsumption"
+                    }
                 }
             ]
         },

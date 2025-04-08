@@ -1,9 +1,10 @@
 # Solar Batteries Constants
 
 LUX_BY_TIME = {
-    tuple(range(6, 12)): 25_000,
+    tuple(range(6, 10)): 30_000,
+    tuple(range(10, 12)): 60_000,
     tuple(range(12, 18)): 100_000,
-    tuple(range(18, 21)): 50_000,
+    tuple(range(18, 21)): 60_000,
     tuple(range(21, 24)): 0
 }
 
@@ -21,21 +22,13 @@ SOLAR_BATTERIES_I_SC_REF = 9
 # Wind Turbine Constants
 
 WIND_SPEED_BY_TIME = {
-    tuple(range(0, 2)): (8, 9),
-    tuple(range(2, 4)): (10, 11),
-    tuple(range(4, 6)): (9, 10),
-    tuple(range(6, 8)): (3, 4),
-    tuple(range(8, 10)): (4, 5),
-    tuple(range(10, 12)): (1, 2),
-    tuple(range(12, 14)): (2, 3),
-    tuple(range(14, 16)): (5, 6),
-    tuple(range(16, 18)): (6, 7),
-    tuple(range(18, 20)): (8, 9),
-    tuple(range(20, 22)): (7, 8),
-    tuple(range(22, 24)): (6, 7)
+    tuple(range(0, 6)): (5, 18),
+    tuple(range(6, 12)): (10, 20),
+    tuple(range(12, 18)): (15, 25),
+    tuple(range(18, 24)): (5, 15)
 }
 
-ROTOR_RADIUS = 1.7
+ROTOR_RADIUS = 0.7
 TIP_SPEED_RATIO = 7
 
 # Generator Constants

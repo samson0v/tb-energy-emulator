@@ -63,10 +63,11 @@ class SolarBatteries(BaseDevice):
                     self.__last_updated_illuminance_time = hour
                     break
         else:
-            min_value = self.illuminance.value - 100
-            max_value = self.illuminance.value + 100
-            new_number = self.illuminance.value + random.randint(-5, 5)
-            self.illuminance.value = max(min_value, min(max_value, new_number))
+            if self.illuminance.value > 0:
+                min_value = self.illuminance.value - 100
+                max_value = self.illuminance.value + 100
+                new_number = self.illuminance.value + random.randint(-5, 5)
+                self.illuminance.value = max(min_value, min(max_value, new_number))
 
         await self._storage.set_value(value=int(self.illuminance.value / 10), **self.illuminance.config)
 

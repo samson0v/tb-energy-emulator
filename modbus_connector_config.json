@@ -163,6 +163,18 @@
               "type": "ON_REPORT_PERIOD",
               "reportPeriod": 4000
             }
+          },
+          {
+            "tag": "dailyConsumption",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 12,
+            "multiplier": 100,
+            "reportStrategy": {
+              "type": "ON_REPORT_PERIOD",
+              "reportPeriod": 3600000
+            }
           }
         ]
       },
