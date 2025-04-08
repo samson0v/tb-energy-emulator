@@ -81,7 +81,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 40000
+              "reportPeriod": 60000
             }
           },
           {
@@ -93,7 +93,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 40000
+              "reportPeriod": 60000
             }
           },
           {
@@ -105,7 +105,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 40000
+              "reportPeriod": 60000
             }
           }
           ,
@@ -220,7 +220,7 @@
             "address": 1,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 30000
+              "reportPeriod": 300000
             }
           },
           {
@@ -232,7 +232,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 40000
+              "reportPeriod": 60000
             }
           },
           {
@@ -255,7 +255,7 @@
             "address": 4,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 120000
+              "reportPeriod": 180000
             }
           },
           {
@@ -456,7 +456,7 @@
             "address": 1,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 15000
+              "reportPeriod": 4000
             }
           },
           {
@@ -478,7 +478,7 @@
             "address": 3,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 15000
+              "reportPeriod": 30000
             }
           },
           {
@@ -490,7 +490,7 @@
             "divider": 100,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 60000
+              "reportPeriod": 120000
             }
           }
         ],
@@ -578,7 +578,7 @@
             "divider": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 40000
+              "reportPeriod": 60000
             }
           },
           {
@@ -1074,7 +1074,7 @@
             "address": 8,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 60000
+              "reportPeriod": 300000
             }
           },
           {
@@ -1085,7 +1085,7 @@
             "address": 9,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 60000
+              "reportPeriod": 300000
             }
           },
           {
@@ -1096,7 +1096,7 @@
             "address": 10,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 60000
+              "reportPeriod": 300000
             }
           },
           {
