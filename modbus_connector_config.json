@@ -200,7 +200,30 @@
           "type": "ON_CHANGE_OR_REPORT_PERIOD",
           "reportPeriod": 10000
         },
-        "attributes": [],
+        "attributes": [
+          {
+            "tag": "currentSessionDuration",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 7,
+            "divider": 10,
+            "reportStrategy": {
+              "type": "ON_CHANGE"
+            }
+          },
+          {
+            "tag": "totalWorkingHours",
+            "type": "16int",
+            "functionCode": 3,
+            "objectsCount": 1,
+            "address": 8,
+            "divider": 10,
+            "reportStrategy": {
+              "type": "ON_CHANGE"
+            }
+          }
+        ],
         "timeseries": [
           {
             "tag": "running",
@@ -278,28 +301,6 @@
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
               "reportPeriod": 4000
-            }
-          },
-          {
-            "tag": "currentSessionDuration",
-            "type": "16int",
-            "functionCode": 3,
-            "objectsCount": 1,
-            "address": 7,
-            "divider": 10,
-            "reportStrategy": {
-              "type": "ON_CHANGE"
-            }
-          },
-          {
-            "tag": "totalWorkingHours",
-            "type": "16int",
-            "functionCode": 3,
-            "objectsCount": 1,
-            "address": 8,
-            "divider": 10,
-            "reportStrategy": {
-              "type": "ON_CHANGE"
             }
           }
         ],
