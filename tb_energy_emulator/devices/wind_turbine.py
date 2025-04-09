@@ -68,7 +68,7 @@ class WindTurbine(BaseDevice):
         if self.wind_speed.value < 2:
             return 0, 0
 
-        output_power = self.__swept_area * self.wind_speed.value ** 3
+        output_power = 359 * self.wind_speed.value
         rotor_speed = (self.__tip_speed_ratio * self.wind_speed.value) / self.__rotor_radius
 
         return int(output_power), int(rotor_speed)
