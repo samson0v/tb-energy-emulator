@@ -14,7 +14,6 @@ class WindTurbine(BaseDevice):
 
         self.__rotor_radius = ROTOR_RADIUS
         self.__tip_speed_ratio = TIP_SPEED_RATIO
-        self.__swept_area = 3.14 * self.__rotor_radius ** 2
 
     def __str__(self):
         return f'\n{self.name} (running: {self.running.value}): ' \

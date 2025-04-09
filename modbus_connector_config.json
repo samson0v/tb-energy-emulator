@@ -278,7 +278,7 @@
             "address": 4,
             "reportStrategy": {
               "type": "ON_REPORT_PERIOD",
-              "reportPeriod": 180000
+              "reportPeriod": 5000
             }
           },
           {
