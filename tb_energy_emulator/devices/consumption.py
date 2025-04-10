@@ -156,13 +156,9 @@ class Consumption(BaseDevice):
         await self._storage.set_value(value=self.required_consumption.value, **self.required_consumption.config)
 
     async def __update_daily_consumption(self):
-        if self._clock.hours == 0 and self._clock.minutes == 0:
+        if self.__last_updated_daily_consumption_time != self._clock.hours:
+            await self._storage.set_value(value=int(self.daily_consumption.value), **self.daily_consumption.config)
             self.daily_consumption.value = 0
-            await self._storage.set_value(value=self.daily_consumption.value, **self.daily_consumption.config)
+            self.__last_updated_daily_consumption_time = self._clock.hours
 
-        if self.__last_updated_daily_consumption_time != self._clock.minutes:
-            self.daily_consumption.value += int(self.consumption.value / 60)
-            await self._storage.set_value(value=int(self.daily_consumption.value / 100),
-                                          **self.daily_consumption.config)
-
-            self.__last_updated_daily_consumption_time = self._clock.minutes
+        self.daily_consumption.value += self.consumption.value / self._clock.ticks_num_in_hour
